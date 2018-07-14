@@ -1,7 +1,7 @@
-ThinkPHP 5.1
+PHPMall
 ===============
 
-ThinkPHP5.1对底层架构做了进一步的改进，减少依赖，其主要特性包括：
+PHPMall是采用ThinkPHP5.1开发的一个B2C模式商城
 
  + 采用容器统一管理对象
  + 支持Facade
