@@ -11,7 +11,7 @@ namespace app\bli\exception;
 
 class RarameterException extends BaseException
 {
-    public $code = 400;
+    public $code = 200;
     public $msg = '非法参数';
     public $errorCode = 999;
 }

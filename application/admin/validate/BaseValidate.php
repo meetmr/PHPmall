@@ -18,7 +18,7 @@ class BaseValidate extends Validate
         //获取http的参数
         //参数校验
         $params = Request::param();
-        $result = $this->batch()->check($params);
+        $result = $this->check($params);
         if(!$result){
             throw new ParameterException(['msg'=> $this->error]);
         }else{
