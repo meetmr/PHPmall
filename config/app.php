@@ -56,13 +56,13 @@ return [
     // +----------------------------------------------------------------------
 
     // 默认模块名
-    'default_module'         => 'index',
+    'default_module'         => 'admin',
     // 禁止访问模块
     'deny_module_list'       => ['common'],
     // 默认控制器名
     'default_controller'     => 'Index',
     // 默认操作名
-    'default_action'         => 'index',
+    'default_action'         => 'admin',
     // 默认验证器
     'default_validate'       => '',
     // 默认的空模块名
@@ -134,5 +134,9 @@ return [
     'show_error_msg'         => false,
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle'       => '',
+    'view_replace_str'  =>  [
+        '__STATIC__'=>'/static/admin',
+        '__ROOT__' => '/',
+    ]
 
 ];
