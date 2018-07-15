@@ -52,15 +52,7 @@ class Cate extends BaseController
             unset($data['id']);
             $data['show_naw'] = isset($data['show_naw']) ? '1' : '0';
             $info = CateMode::update($data,['id'=>$id]);
-            if($info){
-                return json([
-                    'errorCode'=>1
-                ]);
-            }else{
-                return json([
-                    'errorCode'=>0
-                ]);
-            }
+            return $this->_return($info);
         }
         $id = intval(input('id'));
         $cateRow =  CateMode::get($id);
@@ -89,15 +81,12 @@ class Cate extends BaseController
             return $this->_updateSort($data);
         }
     }
+
     public function delete(){
         if(Request::isAjax()){
             $id  = Request::post('id');
             $res = CateMode::where(['id'=>$id])->delete();
-            if($res){
-                return json(1);
-            }else{
-                return json(0);
-            }
+            return $this->__return($res);
         }
     }
 }

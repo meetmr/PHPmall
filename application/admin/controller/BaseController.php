@@ -67,4 +67,11 @@ class BaseController extends Controller
             ]);
         }
     }
+    public function __return($info){
+        if($info){
+            return json(1);
+        }else{
+            return json(0);
+        }
+    }
 }

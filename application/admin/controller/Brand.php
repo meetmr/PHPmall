@@ -52,15 +52,7 @@ class Brand extends BaseController
                 unset($data['brand_logo']);
             }
             $info = BrandModel::update($data,['id'=>$id]);
-           if($info){
-               return json([
-                   'errorCode'=>1
-               ]);
-           }else{
-               return json([
-                   'errorCode'=>0
-               ]);
-           }
+            return $this->_return($info);
         }
         $id = intval(input('id'));
         $brandRow = BrandModel::get($id);

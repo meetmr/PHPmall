@@ -45,13 +45,30 @@
         <td>{$info.title|mb_substr=0,8,'utf-8'}</td>
         <td>{$info.cate.cate_name}</td>
         <td>
+          {if $info.thumb !=null}
+           <img src="/static/uploads/{$info.thumb}" width="40">
+          {else}
+            暂无缩略图
+          {/if}
         </td>
         <td>{$info.link_url}</td>
-        <td>{$info.show_top}</td>
-        <td>{$info.show_status}</td>
+        <td>
+          {if $info.show_top == 1}
+          <button class="layui-btn layui-btn-xs" onclick="update_top(this,'{$info.id}','{$info.show_top}')" >置顶</button>
+          {else}
+          <button class="layui-btn layui-btn-primary layui-btn-xs" onclick="update_top(this,'{$info.id}','{$info.show_top}')">不置顶</button>
+          {/if}
+        </td>
+        <td>
+          {if $info.show_status == 1}
+          <button class="layui-btn layui-btn-xs" onclick="update_status(this,'{$info.id}','{$info.show_status}')" >启用</button>
+          {else}
+          <button class="layui-btn layui-btn-primary layui-btn-xs" onclick="update_status(this,'{$info.id}','{$info.show_status}')">禁用</button>
+          {/if}
+        </td>
         <td>{$info.create_time|mb_substr=0,10,'utf-8'}</td>
         <td>
-            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"  onclick="x_admin_show('修改栏目','',500,550)"><i class="layui-icon layui-icon-edit"></i>编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" onclick="delete_cate(this,'')"><i class="layui-icon layui-icon-delete"></i>删除</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"  onclick="x_admin_show('修改栏目','',500,550)"><i class="layui-icon layui-icon-edit"></i>编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" onclick="delete_article(this,'{$info.id}')"><i class="layui-icon layui-icon-delete"></i>删除</a>
         </td>
       </tr>
       {/volist}
@@ -62,23 +79,6 @@
   <div class="page">
   </div>
   <script>
-    //排序
-    $(".listorder input").blur(function () {
-        var listorder =  $(this).val();
-        var id = $(this).attr('attr-id');
-        var url = "{:url('/admin/Cate/updateSort')}";
-        var postData ={"id":id,"listorder":listorder,'table':"cate","value":"sort"};
-        $.post(url,postData,function (result) {
-            if(result == 1 ){
-                layer.alert("更新成功", {icon: 6},function () {
-                    window.location.reload();  //刷新父级页面
-                });
-            }else {
-                layer.alert("更新失败", {icon: 5});
-            }
-        },"json")
-    });
-
       layui.use('laydate', function(){
           var laydate = layui.laydate;
           //执行一个laydate实例
@@ -91,18 +91,18 @@
               elem: '#end' //指定元素
           });
       });
-      //更改状态
-      function update_status(obj,id,status) {
+      //更改是否置顶
+      function update_top(obj,id,status) {
           layer.confirm('确定要更改状态吗？',function(index){
               $.ajax({
-                   url:"{:url('/admin/Cate/updateStatus')}",
+                   url:"{:url('/admin/Article/updateTop')}",
                   type:"POST",
                   dataType:"json",
                   data:{
                       id:id,  //id
                       status:status,   //状态
-                      table:"cate",
-                      value:"show_naw"
+                      table:"article",
+                      value:"show_top"
                   },
                   success:function (res) {
                     if (res === 1){
@@ -118,10 +118,37 @@
 
       }
 
-      function delete_cate(obj,id){
+      //更改状态
+      function update_status(obj,id,status) {
+          layer.confirm('确定要更改状态吗？',function(index){
+              $.ajax({
+                  url:"{:url('/admin/Article/updateStatus')}",
+                  type:"POST",
+                  dataType:"json",
+                  data:{
+                      id:id,  //id
+                      status:status,   //状态
+                      table:"article",
+                      value:"show_status"
+                  },
+                  success:function (res) {
+                      if (res === 1){
+                          layer.alert("更新成功", {icon: 6},function () {
+                              window.location.reload();  //刷新父级页面
+                          });
+                      }else {
+                          layer.alert("更新失败", {icon: 5});
+                      }
+                  }
+              });
+          });
+
+      }
+
+      function delete_article(obj,id){
           layer.confirm('确认要删除吗？',function(index){
               $.ajax({
-                  url:"{:url('admin/Cate/delete')}",
+                  url:"{:url('admin/Article/delete')}",
                   type:"POST",
                   dataType:"json",
                   data:{

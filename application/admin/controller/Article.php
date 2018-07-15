@@ -39,4 +39,26 @@ class Article extends BaseController
         $this->assign('cate_list',$cateList);
         return $this->fetch('article-add');
     }
+    //更改是否置顶
+    public function updateTop(){
+        if(Request::isAjax()){
+            $data = Request::post();
+            return $this->_updateState($data);
+        }
+    }
+    //更改状态
+    public function updateStatus(){
+        if(Request::isAjax()){
+            $data = Request::post();
+            return $this->_updateState($data);
+        }
+    }
+
+    public function delete(){
+        if(Request::isAjax()){
+            $id  = Request::post('id');
+            $res = ArticleModel::where(['id'=>$id])->delete();
+            return $this->__return($res);
+        }
+    }
 }
