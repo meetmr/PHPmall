@@ -30,11 +30,7 @@ class Brand extends BaseController
             $data = Request::post();
             $data['status'] =isset($data['status']) ? '1' : '0';
             $info =  BrandModel::create($data);
-            if($info){
-                return json([
-                    'errorCode'=>1
-                ]);
-            }
+            return $this->_return($info);
         }
         return $this->fetch('brand-add');
     }

@@ -11,5 +11,6 @@ namespace app\admin\model;
 
 class Cate extends BaseModel
 {
+    protected $hidden = ['cate_keywords','cate_type','cate_description','show_naw','sort','pid','cate_admin','create_time','update_time'];
 
 }

@@ -3,19 +3,18 @@
 <div class="x-nav">
       <span class="layui-breadcrumb">
         <a href="">首页</a>
-        <a href="">商品管理</a>
+        <a href="">文章管理</a>
         <a>
-          <cite>品牌管理</cite>
+          <cite>文章列表</cite>
         </a>
       </span>
   <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
     <i class="layui-icon" style="line-height:30px">ဂ</i></a>
 </div>
-
 <div class="x-body" >
   <xblock>
     <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>&nbsp;&nbsp;&nbsp;&nbsp;
-    <button class="layui-btn" onclick="x_admin_show('添加品牌','{:url(\'admin/brand/add\')}',500,550)"><i class="layui-icon"></i>添加</button>
+    <button class="layui-btn" onclick="x_admin_show('添加文章','{:url(\'admin/Article/add\')}',800,550)"><i class="layui-icon"></i>添加</button>
   </xblock>
   <div class="">
     <div class="box-1">
@@ -25,45 +24,34 @@
         <th width="10" style="text-align: center">
           <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
         </th>
-        <th style="text-align: center" width="80">品牌名称</th>
-        <th style="text-align: center" width="100">品牌地址</th>
-        <th style="text-align: center" width="40">品牌LOGO</th>
-        <th style="text-align: center" width="20">品牌状态</th>
-        <th style="text-align: center" width="50" >排序</th>
+        <th style="text-align: center" width="30">ID</th>
+        <th style="text-align: center" width="100">标题</th>
+        <th style="text-align: center" width="40">所属栏目</th>
+        <th style="text-align: center" width="20">缩略图</th>
+          <th style="text-align: center" width="50" >跳转</th>
+          <th style="text-align: center" width="50" >顶置</th>
+          <th style="text-align: center" width="50" >显示状态</th>
+          <th style="text-align: center" width="50" >发布时间</th>
         <th style="text-align: center" width="50">操作</th>
       </tr>
       </thead>
       <tbody>
-      {volist name="brandInfo" id="info"}
+      {volist name="articleInfo" id="info"}
       <tr  style="text-align: center">
         <td>
           <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id=''><i class="layui-icon">&#xe605;</i></div>
         </td>
-        <td>{$info.brand_name}</td>
-        <td>brand_url</td>
+        <td>{$info.id}</td>
+        <td>{$info.title|mb_substr=0,8,'utf-8'}</td>
+        <td>{$info.cate.cate_name}</td>
         <td>
-          {if $info.brand_logo !=null}
-             <img src="/static/uploads/{$info.brand_logo}" width="40">
-          {else}
-             暂无缩略图
-          {/if}
         </td>
+        <td>{$info.link_url}</td>
+        <td>{$info.show_top}</td>
+        <td>{$info.show_status}</td>
+        <td>{$info.create_time|mb_substr=0,10,'utf-8'}</td>
         <td>
-          {if $info.status == 1}
-            <button class="layui-btn layui-btn-xs" onclick="update_status(this,'{$info.id}','{$info.status}')" >启用</button>
-          {else}
-            <button class="layui-btn layui-btn-primary layui-btn-xs" onclick="update_status(this,'{$info.id}','{$info.status}')">禁用</button>
-          {/if}
-        </td>
-        <td>
-          <div class="layui-input-inline listorder" style="width: 50px;">
-            <input type="text" value="{$info.sort}" size="5" attr-id="{$info.id}" class="layui-input"  name="listorder" >
-          </div>
-        </td>
-        <td class="td-manage" width="10">
-          <div class="layui-input-inline" >
-            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"  onclick="x_admin_show('修改品牌','{:url(\'admin/brand/edit\',[\'id\'=>$info.id])}',500,550)"><i class="layui-icon layui-icon-edit"></i>编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" onclick="delete_brand(this,'{$info.id}','{$info.brand_logo}')"><i class="layui-icon layui-icon-delete"></i>删除</a>
-          </div>
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"  onclick="x_admin_show('修改栏目','',500,550)"><i class="layui-icon layui-icon-edit"></i>编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" onclick="delete_cate(this,'')"><i class="layui-icon layui-icon-delete"></i>删除</a>
         </td>
       </tr>
       {/volist}
@@ -72,15 +60,14 @@
     </div>
   </div>
   <div class="page">
-    {$brandInfo|raw}
   </div>
   <script>
     //排序
     $(".listorder input").blur(function () {
         var listorder =  $(this).val();
         var id = $(this).attr('attr-id');
-        var url = "{:url('/admin/brand/updateSort')}";
-        var postData ={"id":id,"listorder":listorder,'table':"brand","value":"sort"};
+        var url = "{:url('/admin/Cate/updateSort')}";
+        var postData ={"id":id,"listorder":listorder,'table':"cate","value":"sort"};
         $.post(url,postData,function (result) {
             if(result == 1 ){
                 layer.alert("更新成功", {icon: 6},function () {
@@ -108,14 +95,14 @@
       function update_status(obj,id,status) {
           layer.confirm('确定要更改状态吗？',function(index){
               $.ajax({
-                  url:"{:url('admin/brand/updateStatus')}",
+                   url:"{:url('/admin/Cate/updateStatus')}",
                   type:"POST",
                   dataType:"json",
                   data:{
                       id:id,  //id
                       status:status,   //状态
-                      table:"brand",
-                      value:"status"
+                      table:"cate",
+                      value:"show_naw"
                   },
                   success:function (res) {
                     if (res === 1){
@@ -130,16 +117,15 @@
           });
 
       }
-      /*用户-删除*/
-      function delete_brand(obj,id,img_path){
+
+      function delete_cate(obj,id){
           layer.confirm('确认要删除吗？',function(index){
               $.ajax({
-                  url:"{:url('admin/brand/deleteBrand')}",
+                  url:"{:url('admin/Cate/delete')}",
                   type:"POST",
                   dataType:"json",
                   data:{
-                      id:id,  //id
-                      img_path:img_path
+                      id:id  //id
                   },
                   success:function (res) {
                       if (res === 1){

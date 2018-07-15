@@ -55,4 +55,16 @@ class BaseController extends Controller
             return(0);
         }
     }
+
+    public function _return($info){
+        if($info){
+            return json([
+                'errorCode'=>1
+            ]);
+        }else{
+            return json([
+                'errorCode'=>1
+            ]);
+        }
+    }
 }

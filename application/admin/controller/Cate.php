@@ -32,15 +32,7 @@ class Cate extends BaseController
             (new CateValidate())->goCheck();
             $data = Request::post();
             $info = CateMode::create($data);
-            if($info){
-                return json([
-                    'errorCode'=>1
-                ]);
-            }else{
-                return json([
-                    'errorCode'=>1
-                ]);
-            }
+            return $this->_return($info);
         }
         //获取到栏目列表
         $cateList = CateMode::select();
@@ -58,7 +50,7 @@ class Cate extends BaseController
             (new CateValidate())->goCheck();
             $id = $data['id'];
             unset($data['id']);
-            $data['show_naw'] =isset($data['show_naw']) ? '1' : '0';
+            $data['show_naw'] = isset($data['show_naw']) ? '1' : '0';
             $info = CateMode::update($data,['id'=>$id]);
             if($info){
                 return json([

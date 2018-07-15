@@ -3,9 +3,10 @@
 <div class="x-body ">
     <form  class="layui-form">
         <div class="layui-form-item">
-            <label for="cate_name" class="layui-form-label">分类名称</label>
+            <label for="brand_name" class="layui-form-label">分类名称</label>
             <div class="layui-input-inline">
-                <input type="text" id="cate_name" name="cate_name" lay-verify="required"   autocomplete="off" class="layui-input" >
+                <input type="text" id="cate_name" name="cate_name" lay-verify="required"   value="{$cateRow.cate_name}" autocomplete="off" class="layui-input" >
+                <input type="hidden" id="id" name="id"   value="{$cateRow.id}" autocomplete="off" class="layui-input" >
                 <p id="pLog" style="color:red"></p>
             </div>
         </div>
@@ -15,7 +16,14 @@
                 <select name="pid" lay-verify="required">
                     <option value="0" selected>顶级分类</option>
                     {volist name='cateList' id='vo'}
-                    <option value="{$vo.id}"><?php echo str_repeat("-",$vo['level']*3)?>{$vo.cate_name}</option>
+                    <option value="{$vo.id}"
+                            {if $vo.id == $cateRow.pid}
+                            selected
+                            {/if}
+                    {if $vo.id == 1 or $vo.id ==3 }
+                    disabled
+                    {/if}
+                    ><?php echo str_repeat("-",$vo['level']*3)?>{$vo.cate_name}</option>
                     {/volist}
                 </select>
 
@@ -24,19 +32,19 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">关键词</label>
             <div class="layui-input-block">
-                <textarea name="cate_keywords" placeholder="请输入内容" class="layui-textarea"></textarea>
+                <textarea name="cate_keywords" placeholder="请输入内容" class="layui-textarea">{$cateRow.cate_keywords}</textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
-                <textarea name="cate_description" placeholder="请输入内容" class="layui-textarea"></textarea>
+                <textarea name="cate_description" placeholder="请输入内容" class="layui-textarea">{$cateRow.cate_description}</textarea>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">显示导航栏</label>
             <div class="layui-input-block">
-                <input type="checkbox"  checked=""  name="show_naw" lay-skin="switch" lay-filter="switchTest" lay-text="是|否">
+                <input type="checkbox"  {if 1==$cateRow.show_naw}checked=""{/if}   name="show_naw" lay-skin="switch" lay-filter="switchTest" lay-text="是|否">
                 <div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>ON</em><i></i></div>
             </div>
         </div>
@@ -55,7 +63,7 @@
         //监听提交
         form.on('submit(addId)', function(data){
             //console.log(data);
-            $.post("{:url('admin/Cate/add')}",data.field,function(info){
+            $.post("{:url('admin/Cate/edit')}",data.field,function(info){
                 if (info.errorCode===1) {
                     layer.alert("添加成功", {icon: 6},function () {
                         window.parent.location.reload();  //刷新父级页面
