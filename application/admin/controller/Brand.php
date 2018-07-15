@@ -73,16 +73,11 @@ class Brand extends BaseController
         ]);
         return $this->fetch('brand-edit');
     }
+
     public function updateStatus(){
         if(Request::isAjax()){
-            $id  = Request::post('id');
-            $status = 1 == Request::post('status')? 0 : 1;
-            $res = BrandModel::update(['status'=>$status],['id'=>$id]);
-            if($res){
-                return json(1);
-            }else{
-                return json(0);
-            }
+            $data = Request::post();
+            return $this->_updateState($data);
         }
     }
     public function deleteBrand(){
@@ -101,14 +96,12 @@ class Brand extends BaseController
             }
         }
     }
+
     public function updateSort(){
-        $id = intval(Request::post('id'));
-        $sort = intval(Request::post('listorder'));
-        $rew = BrandModel::update(['sort'=>$sort],['id'=>$id]);
-        if($rew){
-            return(1);
-        }else{
-            return(0);
+        if(Request::isAjax()){
+            $data = Request::post();
+            return $this->_updateSort($data);
         }
     }
+
 }
