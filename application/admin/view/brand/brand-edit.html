@@ -23,7 +23,8 @@
                 <button type="button" class="layui-btn" id="upload1">上传图片</button>
                 <input type="hidden" id="img_url" name="brand_logo" value=""/>
                 <div class="layui-upload-list">
-                    <img class="layui-upload-img"   src="<?php echo '/static/uploads/' ?>{$brandRow.brand_logo}" width="100px" height="80px" id="demo1"/>
+                    <img class="layui-upload-img"
+                         {if $brandRow.brand_logo !=null} src="<?php echo '/static/uploads/' ?>{$brandRow.brand_logo}" {/if} width="100px" height="80px" id="demo1"/>
                     <p id="demoText"></p>
                 </div>
             </div>

@@ -35,9 +35,7 @@ class Cate extends BaseController
             return $this->_return($info);
         }
         //获取到栏目列表
-        $cateList = CateMode::select();
-        $cate = new Catetree();
-        $cateList =  $cate->catetree($cateList);
+        $cateList =  CateMode::getCate();
         $this->assign([
             'cateList'  =>  $cateList,
         ]);
@@ -57,9 +55,7 @@ class Cate extends BaseController
         $id = intval(input('id'));
         $cateRow =  CateMode::get($id);
         //获取到栏目列表
-        $cateList = CateMode::select();
-        $cate = new Catetree();
-        $cateList =  $cate->catetree($cateList);
+        $cateList =  CateMode::getCate();
         $this->assign([
             'cateList'  =>  $cateList,
             'cateRow'   =>  $cateRow,

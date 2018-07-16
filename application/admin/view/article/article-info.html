@@ -68,7 +68,7 @@
         </td>
         <td>{$info.create_time|mb_substr=0,10,'utf-8'}</td>
         <td>
-            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"  onclick="x_admin_show('修改栏目','',500,550)"><i class="layui-icon layui-icon-edit"></i>编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" onclick="delete_article(this,'{$info.id}')"><i class="layui-icon layui-icon-delete"></i>删除</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"  onclick="x_admin_show('修改栏目','{:url(\'admin/Article/edit\',[\'id\'=>$info.id])}',800,550)"><i class="layui-icon layui-icon-edit"></i>编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" onclick="delete_article(this,'{$info.id}','{$info.thumb}')"><i class="layui-icon layui-icon-delete"></i>删除</a>
         </td>
       </tr>
       {/volist}
@@ -115,9 +115,7 @@
                   }
               });
           });
-
       }
-
       //更改状态
       function update_status(obj,id,status) {
           layer.confirm('确定要更改状态吗？',function(index){
@@ -142,17 +140,16 @@
                   }
               });
           });
-
       }
-
-      function delete_article(obj,id){
+      function delete_article(obj,id,img_path){
           layer.confirm('确认要删除吗？',function(index){
               $.ajax({
                   url:"{:url('admin/Article/delete')}",
                   type:"POST",
                   dataType:"json",
                   data:{
-                      id:id  //id
+                      id:id,  //id
+                      img_path:img_path
                   },
                   success:function (res) {
                       if (res === 1){

@@ -11,7 +11,6 @@ namespace app\admin\controller;
 use app\admin\model\Article as ArticleModel;
 use app\admin\model\Cate as CateModel;
 use app\admin\validate\ArticleValidate;
-use catetree\Catetree;
 use think\facade\Request;
 class Article extends BaseController
 {
@@ -33,9 +32,7 @@ class Article extends BaseController
             return $this->_return($info);
         }
         //查询栏目
-        $cate_list = CateModel::order('sort','asc')->select();
-        $cate = new Catetree();
-        $cateList = $cate->catetree($cate_list);
+        $cateList = CateModel::getCate();
         $this->assign('cate_list',$cateList);
         return $this->fetch('article-add');
     }
@@ -54,11 +51,44 @@ class Article extends BaseController
         }
     }
 
+    //删除操作
     public function delete(){
         if(Request::isAjax()){
             $id  = Request::post('id');
+            $img_path =  Request::post('img_path');
             $res = ArticleModel::where(['id'=>$id])->delete();
-            return $this->__return($res);
+           return $this->__return($res,1,$img_path);
         }
+    }
+
+    //编辑操作
+    public function edit(){
+        if(Request::isAjax()){
+            $data = Request::post();
+            $id = $data['id'];
+            unset($data['id']);
+            $yauntu =  $data['yuantu'];
+            unset($data['yuantu']);
+            $data['show_top'] = isset($data['show_top']) ? '1' : '0';
+            if($data['thumb']){
+                $path = './static/uploads/'.$yauntu;
+                if(file_exists($path)){
+                    @unlink($path);
+                }
+            }else{
+                unset($data['thumb']);
+            }
+            $info = ArticleModel::update($data,['id'=>$id]);
+            return $this->_return($info);
+        }
+        $id = intval(input('id'));
+        //查询栏目
+        $Article = ArticleModel::get($id);
+        $cateList = CateModel::getCate();
+        $this->assign([
+            'cate_list' => $cateList,
+            'article'   => $Article,
+        ]);
+        return $this->fetch('article-edit');
     }
 }

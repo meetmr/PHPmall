@@ -73,15 +73,7 @@ class Brand extends BaseController
             $id  = Request::post('id');
             $img_path =  Request::post('img_path');
             $res = BrandModel::where(['id'=>$id])->delete();
-            if($res){
-                $path = './static/uploads/'.$img_path;
-                if(file_exists($path)){
-                    @unlink($path);
-                }
-                return json(1);
-            }else{
-                return json(0);
-            }
+            return $this->__return($res,1,$img_path);
         }
     }
 

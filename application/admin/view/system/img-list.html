@@ -1,0 +1,66 @@
+﻿{include file="public/header" /}
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">系统管理</a>
+        <a>
+          <cite>图片管理</cite>
+        </a>
+      </span>
+  <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+    <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="x-body" >
+  <div class="">
+    <div class="box-1">
+      <table class="layui-table" align="center">
+      <thead >
+      <tr class="text-c" >
+        <th style="text-align: center" width="30">图片</th>
+        <th style="text-align: center" width="50">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      {volist name="imgList" id="vo" }
+      <tr  style="text-align: center">
+        <td>
+            <?php $img = substr($vo,'61') ;?>
+            <img src="{$url.'/'.$img}" height="50">
+            {$Think.Request.domain}
+        </td>
+        <td class="td-manage" width="10">
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" onclick="delete_cate(this,'{$img}')"><i class="layui-icon layui-icon-delete"></i>删除</a>
+        </td>
+      </tr>
+      {/volist}
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <div class="page">
+  </div>
+  <script>
+      function delete_cate(obj,img){
+          layer.confirm('确认要删除吗？',function(index){
+              $.ajax({
+                  url:"{:url('admin/System/imgDelete')}",
+                  type:"POST",
+                  dataType:"json",
+                  data:{
+                      img:img
+                  },
+                  success:function (res) {
+                      if (res === 1){
+                          $(obj).parents("tr").remove();
+                          layer.msg('已删除!',{icon:1,time:1000});
+                      }else {
+                          layer.alert("更新失败", {icon: 5});
+                      }
+                  }
+              });
+          });
+      }
+  </script>
+</body>
+</html>

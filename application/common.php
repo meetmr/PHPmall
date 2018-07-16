@@ -10,3 +10,18 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
+//图片处理
+function my_scandir($dir = UEDIOOR){
+    $files = array();
+    $dir_list = scandir($dir);
+    foreach ($dir_list as $file){
+        if($file != '.' && $file != '..'){
+            if(is_dir($dir.'/'.$file)){
+                $files[$file] = my_scandir($dir.'/'.$file);
+            }else{
+                $files[] = $dir.'/'.$file;
+            }
+        }
+    }
+    return $files;
+}

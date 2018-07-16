@@ -58,6 +58,7 @@ class BaseController extends Controller
 
     public function _return($info){
         if($info){
+
             return json([
                 'errorCode'=>1
             ]);
@@ -67,8 +68,14 @@ class BaseController extends Controller
             ]);
         }
     }
-    public function __return($info){
+    public function __return($info,$isimg = 0,$img_path){
         if($info){
+            if($isimg){
+                $path = './static/uploads/'.$img_path;
+                if(file_exists($path)){
+                    @unlink($path);
+                }
+            }
             return json(1);
         }else{
             return json(0);
