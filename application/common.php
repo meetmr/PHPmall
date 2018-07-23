@@ -25,3 +25,8 @@ function my_scandir($dir = UEDIOOR){
     }
     return $files;
 }
+
+function dd($value){
+    dump($value);
+    die;
+}
