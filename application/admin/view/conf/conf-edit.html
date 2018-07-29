@@ -1,0 +1,88 @@
+{include file="public/header" /}
+<body>
+<div class="x-body ">
+    <form  class="layui-form">
+        <div class="layui-form-item">
+            <label for="cname" class="layui-form-label">中文名称</label>
+            <div class="layui-input-inline">
+                <input type="text" id="cname" name="cname" lay-verify="required" value="{$confRow.cname}"  autocomplete="off" class="layui-input" >
+                <input type="hidden" name="id" value="{$confRow.id}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="ename" class="layui-form-label">英文名称</label>
+            <div class="layui-input-inline">
+                <input type="text" id="ename" name="ename" lay-verify="required" value="{$confRow.ename}"  autocomplete="off" class="layui-input" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">表单类型</label>
+            <div class="layui-input-block">
+                <select name="form_type" lay-verify="required">
+                    <option value="input"   {if $confRow.form_type === "input"}checked{/if}      >input</option>
+                    <option value="radio"   {if $confRow.form_type === "radio"}selected {/if}    >radio</option>
+                    <option value="checkbox"  {if $confRow.form_type === "checkbox"}selected {/if} >checkbox</option>
+                    <option value="select" {if $confRow.form_type === "select"}selected {/if}   >select</option>
+                    <option value="textarea"  {if $confRow.form_type === "textarea"}selected {/if}>textarea</option>
+                    <option value="file"  {if $confRow.form_type === "file"}selected {/if}    >file</option>
+                </select>
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">配置类型</label>
+            <div class="layui-input-block">
+                <select name="conf_type" lay-verify="required">
+                    <option value="1" {if $confRow.conf_type == 1} selected {/if} >店铺配置</option>
+                    <option value="2" {if $confRow.conf_type == 2} selected {/if} >商品配置</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">可选值</label>
+            <div class="layui-input-block">
+                <textarea name="values"  class="layui-textarea">{$confRow.values}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="cate_name" class="layui-form-label">默认值</label>
+            <div class="layui-input-inline">
+                <input type="text" id="value" name="value" value="{$confRow.value}"  autocomplete="off" class="layui-input" >
+                <p id="pLog" style="color:red"></p>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn" lay-submit lay-filter="addId">
+                修改
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form'], function(){
+        $ = layui.jquery;
+        var form = layui.form,layer = layui.layer;
+        //监听提交
+        form.on('submit(addId)', function(data){
+            //console.log(data);
+            $.post("{:url('admin/Conf/edit')}",data.field,function(info){
+                if (info.errorCode===1) {
+                    layer.alert("修改成功", {icon: 6},function () {
+                        window.parent.location.reload();  //刷新父级页面
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前弹出层
+                        parent.layer.close(index);
+                    });
+                }else{
+                    layer.alert(info.msg, {icon: 5});
+                }
+            },'json');
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

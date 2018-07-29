@@ -77,7 +77,6 @@ class Cate extends BaseController
             return $this->_updateSort($data);
         }
     }
-
     public function delete(){
         if(Request::isAjax()){
             $id  = Request::post('id');

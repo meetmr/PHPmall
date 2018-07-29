@@ -68,7 +68,7 @@ class BaseController extends Controller
             ]);
         }
     }
-    public function __return($info,$isimg = 0,$img_path){
+    public function __return($info,$isimg = 0,$img_path = null){
         if($info){
             if($isimg){
                 $path = './static/uploads/'.$img_path;
