@@ -13,6 +13,46 @@ use app\admin\validate\ConfValidate;
 use app\admin\model\Conf as ConfModel;
 class Conf extends BaseController
 {
+    public function confList(){
+        if(Request::isPost()){
+            $data = Request::post();
+            unset($data['file']);
+
+            //复选框空选问题
+            $chec_felds2d = ConfModel::field('ename')->where(['form_type'=>'checkbox'])->select();
+            $chec_felds1d = [];
+            if($chec_felds2d){
+                foreach ($chec_felds2d as $k=>$v){
+                    $chec_felds1d[] = $v['ename'];
+                }
+            }
+            $all_fieds = [];
+            //处理文字数据
+            foreach ($data as $k=>$v){
+                $all_fieds[] = $k;
+                if(is_array($v)){
+                    $value = implode(',',$v);
+                    ConfModel::where(['ename'=>$k])->update(['value'=>$value]);
+                }else{
+                    ConfModel::where(['ename'=>$k])->update(['value'=>$v]);
+                }
+            }
+            foreach ($chec_felds1d as $k=>$v){
+                if(!in_array($v,$all_fieds)){
+                    ConfModel::where(['ename'=>$v])->update(['value'=>'']);
+                }
+            }
+            return $this->_return(1);
+        }
+        $shopConRows = ConfModel::where(['conf_type'=>1])->order('sort desc')->select();
+        $goodsConRows = ConfModel::where(['conf_type'=>2])->order('sort desc')->select();
+        $this->assign([
+            'shopConRows'   =>  $shopConRows,
+            'goodsConRows'  =>  $goodsConRows
+
+        ]);
+        return $this->fetch('conf-list');
+    }
     //渲染列表
     public function index(){
         $confInfo = ConfModel::order('sort asc')->paginate(10);

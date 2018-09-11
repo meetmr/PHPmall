@@ -16,11 +16,11 @@
     <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>&nbsp;&nbsp;&nbsp;&nbsp;
     <button class="layui-btn" onclick="x_admin_show('添加栏目','{:url(\'admin/Cate/add\')}',500,550)"><i class="layui-icon"></i>添加</button>
   </xblock>
-  <div class="">
+<div class="container-wrap">
     <div class="box-1">
-      <table class="layui-table" align="center">
-      <thead >
-      <tr class="text-c" >
+        <table class="layui-table">
+            <thead>
+            <tr>
         <th width="10" style="text-align: center">
           <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
         </th>
@@ -79,8 +79,9 @@
       </tbody>
     </table>
     </div>
-  </div>
+</div>
   <div class="page">
+      {$cateInfo|raw}
   </div>
   <script>
     //排序

@@ -1,0 +1,276 @@
+{include file="public/header" /}
+<body>
+<div class="x-body ">
+    <form  class="layui-form">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">店铺配置</li>
+            <li>商品配置</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                    <?php foreach($shopConRows as $key=>$conf):?>
+                    <?php if($conf['form_type'] == 'input'):?>
+                    <div class="layui-form-item">
+                        <label for="cname" class="layui-form-label"><?php echo $conf['cname'];?></label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="cname" value="<?php echo $conf['value'];?>" name="<?php echo $conf['ename'];?>" lay-verify="required"   autocomplete="off" class="layui-input" >
+                        </div>
+                    </div>
+                    <?php elseif($conf['form_type'] == 'checkbox'):?>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">复选框</label>
+                        <div class="layui-input-block">
+                            <?php if($conf['values']):?>
+                            <?php
+								    $itmearr = explode(',',$conf['values']);
+									$arrvalue = explode(',',$conf['value']);
+							  ?>
+                            <?php foreach($itmearr as $k1=>$v1):?>
+                            <input type="checkbox"   name="<?php echo$conf['ename'];?>[]" value="<?php echo $v1;?>" title="<?php echo $v1;?>"
+                            <?php if(in_array($v1,$arrvalue)){
+															echo 'checked';
+														}?>
+
+                            ><div class="layui-unselect layui-form-checkbox layui-form-checked"><span><?php echo $v1;?></span><i class="layui-icon layui-icon-ok"></i></div>
+                            <?php endforeach; endif;?>
+                        </div>
+                    </div>
+
+                    <?php elseif($conf['form_type'] == 'textarea'):?>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label"><?php echo $conf['cname'];?></label>
+                        <div class="layui-input-block">
+                            <textarea name="<?php echo $conf['ename'];?>"  class="layui-textarea"><?php echo $conf['value'];?></textarea>
+                        </div>
+                    </div>
+                    <?php elseif($conf['form_type'] == 'radio'):?>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><?php echo $conf['cname'];?></label>
+                        <div class="layui-input-block">
+                        <?php if($conf['values']):?>
+                        <?php
+								$itmearr = explode(',',$conf['values']);
+								foreach($itmearr as $k1=>$v1)
+                        :?>
+                            <input type="radio" name="<?php echo $conf['ename'];?>" value="<?php echo $v1;?>" title="<?php echo $v1;?>" <?php if($conf['value'] == $v1){
+													echo 'checked';
+												}?>>
+                        <?php endforeach; endif; ?>
+                        </div>
+                    </div>
+                    <?php  elseif($conf['form_type'] == 'select'):?>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><?php echo $conf['cname'];?></label>
+                        <div class="layui-input-block">
+                            <select name="<?php echo $conf['ename'];?>" lay-verify="required">
+                        <?php if($conf['values']):?>
+                        <?php $itmearr = explode(',',$conf['values']);?>
+                                <?php foreach($itmearr as $k1=>$v1):?>
+                            <option value="<?php echo $v1;?>"
+                                <?php if($conf['value'] == $v1){
+													echo 'selected ';
+												}?>
+                            ><?php echo $v1;?></option>
+                                <?php endforeach;?>
+                        <?php  endif;?>
+                            </select>
+                        </div>
+                    </div>
+                    <?php elseif($conf['form_type'] == 'file'):?>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><?php echo $conf['cname'];?></label>
+                        <div class="layui-input-block">
+                            <button type="button" class="layui-btn" id="upload1">上传图片</button><input class="layui-upload-file" type="file" accept="undefined" name="file">
+                            <?php if($conf['value']):?>
+                            <input type="hidden" id="img_url" name="<?php echo $conf['ename'];?>" value="<?php echo $conf['value'];?>">
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" src="/static/uploads/<?php echo $conf['value'];?> " width="100px" height="80px" id="demo1">
+                                <p id="demoText"></p>
+                            </div>
+                            <?php else:?>
+                            <input type="hidden" id="img_url" name="<?php echo $conf['ename'];?>" value="">
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" width="100px" height="80px" id="demo1">
+                                <p id="demoText"></p>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif;?>
+                    <?php endforeach;?>
+
+
+            </div>
+            <div class="layui-tab-item">
+                    <?php foreach($goodsConRows as $key=>$conf):?>
+                    <?php if($conf['form_type'] == 'input'):?>
+                    <div class="layui-form-item">
+                        <label for="cname" class="layui-form-label"><?php echo $conf['cname'];?></label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="cname" value="<?php echo $conf['value'];?>" name="<?php echo $conf['ename'];?>" lay-verify="required"   autocomplete="off" class="layui-input" >
+                        </div>
+                    </div>
+                    <?php elseif($conf['form_type'] == 'checkbox'):?>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">复选框</label>
+                        <div class="layui-input-block">
+                            <?php if($conf['values']):?>
+                            <?php
+								    $itmearr = explode(',',$conf['values']);
+									$arrvalue = explode(',',$conf['value']);
+							  ?>
+                            <?php foreach($itmearr as $k1=>$v1):?>
+                            <input type="checkbox"   name="<?php echo$conf['ename'];?>[]" value="<?php echo $v1;?>" title="<?php echo $v1;?>"
+                            <?php if(in_array($v1,$arrvalue)){
+															echo 'checked';
+														}?>
+
+                            ><div class="layui-unselect layui-form-checkbox layui-form-checked"><span><?php echo $v1;?></span><i class="layui-icon layui-icon-ok"></i></div>
+                            <?php endforeach; endif;?>
+                        </div>
+                    </div>
+
+                    <?php elseif($conf['form_type'] == 'textarea'):?>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label"><?php echo $conf['cname'];?></label>
+                        <div class="layui-input-block">
+                            <textarea name="<?php echo $conf['ename'];?>"  class="layui-textarea"><?php echo $conf['value'];?></textarea>
+                        </div>
+                    </div>
+                    <?php elseif($conf['form_type'] == 'radio'):?>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><?php echo $conf['cname'];?></label>
+                        <div class="layui-input-block">
+                            <?php if($conf['values']):?>
+                            <?php
+								$itmearr = explode(',',$conf['values']);
+								foreach($itmearr as $k1=>$v1)
+                            :?>
+                            <input type="radio" name="<?php echo $conf['ename'];?>" value="<?php echo $v1;?>" title="<?php echo $v1;?>" <?php if($conf['value'] == $v1){
+													echo 'checked';
+												}?>>
+                            <?php endforeach; endif; ?>
+                        </div>
+                    </div>
+                    <?php  elseif($conf['form_type'] == 'select'):?>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><?php echo $conf['cname'];?></label>
+                        <div class="layui-input-block">
+                            <select name="<?php echo $conf['ename'];?>" lay-verify="required">
+                                <?php if($conf['values']):?>
+                                <?php $itmearr = explode(',',$conf['values']);?>
+                                <?php foreach($itmearr as $k1=>$v1):?>
+                                <option value="<?php echo $v1;?>"
+                                <?php if($conf['value'] == $v1){
+													echo 'selected ';
+												}?>
+                                ><?php echo $v1;?></option>
+                                <?php endforeach;?>
+                                <?php  endif;?>
+                            </select>
+                        </div>
+                    </div>
+                    <?php elseif($conf['form_type'] == 'file'):?>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><?php echo $conf['cname'];?></label>
+                        <div class="layui-input-block">
+                            <button type="button" class="layui-btn" id="upload1">上传图片</button><input class="layui-upload-file" type="file" accept="undefined" name="file">
+                            <?php if($conf['value']):?>
+                            <input type="hidden" id="img_url" name="<?php echo $conf['ename'];?>" value="<?php echo $conf['value'];?>">
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" src="/static/uploads/<?php echo $conf['value'];?> " width="100px" height="80px" id="demo1">
+                                <p id="demoText"></p>
+                            </div>
+                            <?php else:?>
+                            <input type="hidden" id="img_url" name="<?php echo $conf['ename'];?>" value="">
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" width="100px" height="80px" id="demo1">
+                                <p id="demoText"></p>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif;?>
+                    <?php endforeach;?>
+
+
+            </div>
+        </div>
+    </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn" lay-submit lay-filter="addId">
+                修改
+            </button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    layui.use('upload', function(){
+        var upload = layui.upload
+            , $ = layui.jquery;
+        var uploadInst = upload.render({
+            elem: '#upload1' //绑定元素
+            ,url: "{:url('admin/brand/upload')}"
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.code === 0){
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                document.getElementById("img_url").value = res.url;
+
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function(){
+                    uploadInst.upload();
+                });
+            }
+        });
+    });
+</script>
+
+<script>
+
+    layui.use('element', function(){
+        var element = layui.element;
+
+        //…
+    });
+
+    layui.use(['form'], function(){
+        $ = layui.jquery;
+        var form = layui.form,layer = layui.layer;
+        //监听提交
+        form.on('submit(addId)', function(data){
+            //console.log(data);
+            $.post("{:url('admin/Conf/confList')}",data.field,function(info){
+                if (info.errorCode===1) {
+                    layer.alert("修改成功", {icon: 6},function () {
+                        window.location.reload();  //刷新父级页面
+                        // 获得frame索引
+
+                    });
+                }else{
+                    layer.alert(info.msg, {icon: 5});
+                }
+            },'json');
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

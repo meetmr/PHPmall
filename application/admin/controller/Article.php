@@ -16,7 +16,7 @@ class Article extends BaseController
 {
     //渲染列表
     public function index(){
-        $articleInfo = ArticleModel::with('Cate')->select();
+        $articleInfo = ArticleModel::with('Cate')->paginate(10);
         $this->assign([
            'articleInfo'    =>  $articleInfo,
         ]);

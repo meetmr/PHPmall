@@ -18,7 +18,7 @@ class Cate extends BaseController
     //渲染列表
     public function index(){
         $cate = new Catetree();
-        $cateInfo = CateMode::order('sort','asc')->select();
+        $cateInfo = CateMode::order('sort','asc')->paginate(10);
         $catelist =  $cate->catetree($cateInfo);
         $this->assign([
             'cateInfo'     =>$cateInfo,
