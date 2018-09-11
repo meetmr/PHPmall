@@ -1,0 +1,137 @@
+﻿{include file="public/header" /}
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">商品管理</a>
+        <a>
+          <cite>商品分类</cite>
+        </a>
+      </span>
+  <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+    <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="x-body" >
+  <xblock>
+    <button class="layui-btn" onclick="x_admin_show('添加栏目','{:url(\'admin/Category/add\')}',500,550)"><i class="layui-icon"></i>添加</button>
+  </xblock>
+<div class="container-wrap">
+    <div class="box-1">
+        <table class="layui-table">
+            <thead>
+            <tr>
+        <th style="text-align: center" width="30">ID</th>
+        <th style="text-align: center" width="100">分类名称</th>
+        <th style="text-align: center" width="20">关键词</th>
+        <th style="text-align: center" width="50" >描述</th>
+                <th style="text-align: center" width="50" >显示状态</th>
+        <th style="text-align: center" width="50">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      {volist name="category" id="info"}
+      <tr  style="text-align: center">
+       <td>
+           {$info.id}
+           <span class="layui-table-sort layui-inline">
+     <i class="layui-edge layui-table-sort-asc" onclick="SanSort('{$info.id}','asc')"></i>
+     <i class="layui-edge layui-table-sort-desc"  onclick="SanSort('{$info.id}','desc')"></i>
+  </span>
+       </td>
+       <td style="text-align: left">
+           <?php echo str_repeat("-",$info['level']*3);?>{$info.cate_name}
+       </td>
+       <td>{$info.keywords}</td>
+       <td>{$info.description}</td>
+        <td>
+            {if $info.status == 1}
+            <button class="layui-btn layui-btn-xs" onclick="update_status(this,'{$info.id}','{$info.status}')" >启用</button>
+            {else}
+            <button class="layui-btn layui-btn-primary layui-btn-xs" onclick="update_status(this,'{$info.id}','{$info.status}')">禁用</button>
+            {/if}
+        </td>
+        <td class="td-manage" width="10">
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"  onclick="x_admin_show('修改栏目','{:url(\'admin/Category/edit\',[\'id\'=>$info.id])}',500,550)"><i class="layui-icon layui-icon-edit"></i>编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" onclick="delete_cate(this,'{$info.id}')"><i class="layui-icon layui-icon-delete"></i>删除</a>
+        </td>
+      </tr>
+    {/volist}
+      </tbody>
+    </table>
+    </div>
+</div>
+  <div class="page">
+  </div>
+  <script>
+
+
+      function SanSort(id,sort) {
+          $.ajax({
+              url:"/admin/Category/SanSort",
+              type:"POST",
+              dataType:"json",
+              data:{
+                  id:id,
+                  sort:sort
+              },
+              success:function (res) {
+                  if(res.error === 1000 ){
+                      layer.msg(res.msg, {icon: 5});
+                  }else if(res.error === 1) {
+                      window.location.reload();  //刷新父级页面
+                  }else {
+                      layer.msg(res.msg, {icon: 5});
+                  }
+              }
+          });
+      }
+      //更改状态
+      function update_status(obj,id,status) {
+          layer.confirm('确定要更改状态吗？',function(index){
+              $.ajax({
+                  url:"{:url('admin/Category/updateStatus')}",
+                  type:"POST",
+                  dataType:"json",
+                  data:{
+                      id:id,  //id
+                      status:status,   //状态
+                      table:"category",
+                      value:"status"
+                  },
+                  success:function (res) {
+                      if (res === 1){
+                          layer.alert("更新成功", {icon: 6},function () {
+                              window.location.reload();  //刷新父级页面
+                          });
+                      }else {
+                          layer.alert("更新失败", {icon: 5});
+                      }
+                  }
+              });
+          });
+      }
+
+      function delete_cate(obj,id){
+          layer.confirm('确认要删除吗？',function(index){
+              $.ajax({
+                  url:"{:url('admin/Category/delete')}",
+                  type:"POST",
+                  dataType:"json",
+                  data:{
+                      id:id  //id
+                  },
+                  success:function (res) {
+                      if ( res.errorCode === 1){
+                          $(obj).parents("tr").remove();
+                          layer.msg('已删除!',{icon:1,time:1000});
+                      }else {
+                          layer.alert("更新失败", {icon: 5});
+                      }
+                  }
+              });
+          });
+      }
+
+
+  </script>
+</body>
+</html>

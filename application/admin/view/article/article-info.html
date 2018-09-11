@@ -13,7 +13,7 @@
 </div>
 <div class="x-body" >
   <xblock>
-    <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>&nbsp;&nbsp;&nbsp;&nbsp;
+
     <button class="layui-btn" onclick="x_admin_show('添加文章','{:url(\'admin/Article/add\')}',800,550)"><i class="layui-icon"></i>添加</button>
   </xblock>
   <div class="container-wrap">
@@ -21,9 +21,7 @@
       <table class="layui-table">
         <thead>
         <tr>
-        <th width="10" style="text-align: center">
-          <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
-        </th>
+
         <th style="text-align: center" width="30">ID</th>
         <th style="text-align: center" width="100">标题</th>
         <th style="text-align: center" width="40">所属栏目</th>
@@ -38,9 +36,6 @@
       <tbody>
       {volist name="articleInfo" id="info"}
       <tr  style="text-align: center">
-        <td>
-          <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id=''><i class="layui-icon">&#xe605;</i></div>
-        </td>
         <td>{$info.id}</td>
         <td>{$info.title|mb_substr=0,8,'utf-8'}</td>
         <td>{$info.cate.cate_name}</td>
@@ -48,7 +43,7 @@
           {if $info.thumb !=null}
            <img src="/static/uploads/{$info.thumb}" width="40">
           {else}
-            暂无缩略图
+          <span class="layui-badge layui-bg-gray">暂无缩略图</span>
           {/if}
         </td>
         <td>{$info.link_url}</td>
@@ -164,25 +159,6 @@
           });
       }
 
-      function delAll (argument) {
-          var data = tableCheck.getData();
-          layer.confirm('确认要删除吗？',function(index){
-              //捉到所有被选中的，发异步进行删除
-              $.ajax({
-                  url:"/index/index/delall",
-                  type:"POST",
-                  dataType:"json",
-                  data:{
-                      table:"hy_drawing_detial",  //表名
-                      data:data   //数据
-                  },
-                  success:function (res) {
-                      layer.msg(res.message, {icon: 1});
-                      $(".layui-form-checked").not('.header').parents('tr').remove();
-                  },
-              });
-          });
-      }
   </script>
 </body>
 </html>
