@@ -15,6 +15,8 @@ Route::get('think', function () {
 
 Route::get('hello/:name', 'admin/hello');
 
+Route::rule('category/:id','index/Categorys/index','GET',['ext'=>'html|htm'],['id'=>'\d{1,3}']);
+
 return [
 
 ];

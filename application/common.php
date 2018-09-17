@@ -12,7 +12,7 @@ use app\admin\model\GoodsImg;
 use app\admin\model\Category;
 use app\admin\model\Product;
 use app\admin\model\Recommend;
-// 应用公共文件
+
 //图片处理
 function my_scandir($dir = UEDIOOR){
     $files = array();
@@ -60,3 +60,15 @@ function getGoodsProduct($goods_id){
 function getGoodsRecommendName($c_id){
     return Recommend::getGoodsRecommendName($c_id);
 }
+
+// 字符截取替换
+
+//字符串截取并且超出显示省略号
+
+function subtext($text, $length){
+    if (mb_strlen($text, 'utf8') > $length){
+        return mb_substr($text, 0, $length, 'utf8') . ' …';
+    }
+    return $text;
+}
+

@@ -62,7 +62,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">推荐位</label>
                         <div class="layui-input-block">
-                            <input type="radio" name="recommend_id" value="0" {if $goodsRow.recommend_id == 2} checked {/if} title="不推荐"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>不推荐</div></div>
+                            <input type="radio" name="recommend_id" value="0" {if $goodsRow.recommend_id == 0} checked {/if} title="不推荐"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>不推荐</div></div>
                             {volist name = "recommends" id ="recommend"}
                             <input type="radio" name="recommend_id"  {if $goodsRow.recommend_id == $recommend.id} checked {/if} value="{$recommend.id}" title="{$recommend.name}"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>{$recommend.name}</div></div>
                             {/volist}

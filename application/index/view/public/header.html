@@ -1,0 +1,78 @@
+<div class="header w-full clearfix">
+    <div class="top-nav w"></div>
+    <div class="top-nav w clearfix">
+        <a alt="安踏官方商城" href="/" class="logo"><img src="/static/index/picture/logo_1.jpg" /></a>
+        <p class="logo-box" id="login">
+            <a href="/member/order_member/index">欢迎您，13541817746</a>|
+            <a href="/logout">退出</a>
+        </p>
+        <ul class="quick-menu clearfix">
+            <li class="first-item">
+                <a href="/kuaidi">订单查询</a>|</li>
+
+            <li class="mobile-btn">
+                <i class="icon icon-phone"></i>
+                <a>手机商城</a>|
+                <div class="mobile-shop hide">
+                    <img src="/static/index/picture/qrcode-125x125_1.jpg">
+                </div>
+            </li>
+
+            <li><i class="icon icon-cart"></i>
+                <a class="" href="/cart">购物车<span class="cart-num">(4)</span>件</a></li>
+        </ul>
+    </div>
+    <div class="nav w-full">
+        <div class="main-nav w clearfix">
+            <!-- 左侧导航条 -->
+            <div class="all-styles">
+                <a class="all-styles-title" title="查找所有商品分类" href="{:url('index/Categorys/index',array('id'=>0))}">所有产品分类</a>
+                <ul class="all-styles-tab hide">
+                    {volist name="category" id="vo_category"}
+                    <li>
+                        <h3><a title="{$vo_category.cate_name}"  href="{:url('index/Categorys/index',array('id'=>$vo_category.id))}">{$vo_category.cate_name}</a></h3>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+            <!-- 左侧导航条 END -->
+            <!-- 横向导航条 -->
+            <ul class="line-nav clearfix">
+
+
+                <li class="item">
+                    <a href="/">首页</a>
+                </li>
+
+                <!-- 首页栏目-->
+                {volist name="recommend" id="vo_recommend"}
+                <li class="item">
+                    <a href="/sale">{$vo_recommend.name}</a>
+                </li>
+                {/volist}
+                <!-- 首页栏目end-->
+            </ul>
+            <!-- 横向导航条 END -->
+            <div class="nav-search">
+                <input type="text"  name="key" class="nav-search-input" id="search_box" value="" >
+                <a id="search" url="/search" class="nav-search-btn"></a>
+                <!--搜索热词-->
+                <div class="suggestion">
+                    <div class="hotwords">
+                        <ul class="hotwords-list">
+                            <li><a href="/search?key=鞋">鞋</a></li>
+                            <li><a href="/search?key=柴烧">柴烧</a></li>
+                            <li><a href="/search?key=茶具">茶具</a></li>
+                            <li><a href="/search?key=百搭T恤">百搭T恤</a></li>
+                            <li><a href="/search?key=鞋城共舞">鞋城共舞</a></li>
+                            <li><a href="/search?key=爱尚运动">爱尚运动</a></li>
+                            <li><a href="/search?key=10月大放价">10月大放价</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

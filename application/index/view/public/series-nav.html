@@ -1,0 +1,22 @@
+<ul class="w">
+    <!--最新商品-->
+    {volist name="newGoods" id="vo_new_goods"}
+    <li class="item-2 item">
+        <a>
+            <img src="/static/uploads/{$vo_new_goods.og_thumb}" class="loading" style="display: inline;">
+        </a>
+        <div class="overburden">
+
+            <div class="color-opa section">
+                <p>
+
+                    <a target="_blank" href="/goods/5" class="overburden-btn overburden-btn-1 overburden-btn-1b">立即购买</a>
+                </p>
+            </div>
+        </div>
+        <h3 style="font-size: 14px;"><a target="_blank" href="" title="{$vo_new_goods.goods_name}">{$vo_new_goods.goods_name}</a></h3>
+    </li>
+    {/volist}
+    <!--最新商品end-->
+
+</ul>

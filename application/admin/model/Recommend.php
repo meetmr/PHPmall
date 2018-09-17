@@ -15,4 +15,9 @@ class Recommend extends BaseModel
     public static function getGoodsRecommendName($c_id){
         return self::where('id','=',$c_id)->value('name');
     }
+
+    // 获取栏目推荐位
+    public static function getRecommendColumn(){
+        return self::where(['type'=>0])->select();
+    }
 }

@@ -156,8 +156,6 @@ class Goods extends BaseController
             $baseDate['recommend_id'] = $data['recommend_id'];
             $info = GoodesMdel::update($baseDate,['id'=>$goodId]);
             return $this->_return($info);
-
-
         }
         // 获取当前商品信息
         $goodsRow = GoodesMdel::get(input('id'));
