@@ -1,0 +1,54 @@
+{include file="public/header" /}
+<body>
+<div class="x-body ">
+    <form  class="layui-form">
+        <div class="layui-form-item">
+            <label for="name" class="layui-form-label">推荐位名称</label>
+            <div class="layui-input-inline">
+                <input type="text" id="name" name="name" value="{$recommend['name']}"  autocomplete="off" class="layui-input"  lay-verify="required">
+                <input type="hidden" id="id" name="id" value="{$recommend['id']}"  autocomplete="off" class="layui-input"  lay-verify="required">
+                <p id="pLog" style="color:red"></p>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">推荐类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="type"  {if $recommend['type'] == 1}checked{/if}  value="1" title="商品推荐"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>商品推荐</div></div>
+                <input type="radio" name="type"  {if $recommend['type'] == 0}checked{/if}  value="0" title="栏目推荐"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>栏目推荐</div></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn" lay-submit lay-filter="addId">
+                修改
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form'], function(){
+        $ = layui.jquery;
+        var form = layui.form,layer = layui.layer;
+        //监听提交
+        form.on('submit(addId)', function(data){
+            //console.log(data);
+            $.post("{:url('admin/Recommend/edit')}",data.field,function(info){
+                if (info.errorCode===1) {
+                    layer.alert("修改成功", {icon: 6},function () {
+                        window.parent.location.reload();  //刷新父级页面
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前弹出层
+                        parent.layer.close(index);
+                    });
+                }else{
+                    layer.alert(info.msg, {icon: 5});
+                }
+            },'json');
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

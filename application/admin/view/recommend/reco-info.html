@@ -1,0 +1,89 @@
+﻿{include file="public/header" /}
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">商品管理</a>
+        <a>
+          <cite>推荐位管理</cite>
+        </a>
+      </span>
+  <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+    <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+
+<div class="x-body" >
+  <xblock>
+    <button class="layui-btn" onclick="x_admin_show('添加推荐位','{:url(\'admin/Recommend/add\')}',500,300)"><i class="layui-icon"></i>添加</button>
+  </xblock>
+  <div class="container-wrap">
+    <div class="box-1">
+      <table class="layui-table">
+        <thead>
+        <tr>
+        <th style="text-align: center" width="80">ID</th>
+        <th style="text-align: center" width="100">推荐位名称</th>
+        <th style="text-align: center" width="40">推荐商品</th>
+        <th style="text-align: center" width="50">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      {volist name="recommends" id="info"}
+      <tr  style="text-align: center">
+        <td>{$info.id}</td>
+        <td>{$info.name}</td>
+        <td></td>
+        <td class="td-manage" width="10">
+          <div class="layui-input-inline" >
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"  onclick="x_admin_show('修改推荐位','{:url(\'admin/Recommend/edit\',[\'id\'=>$info.id])}',500,300)"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" onclick="delete_link(this,'{$info.id}')" ><i class="layui-icon layui-icon-delete"></i>删除</a>
+          </div>
+        </td>
+      </tr>
+      {/volist}
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <div class="page">
+  </div>
+  <script>
+      layui.use('laydate', function(){
+          var laydate = layui.laydate;
+          //执行一个laydate实例
+          laydate.render({
+              elem: '#start' //指定元素
+          });
+
+          //执行一个laydate实例
+          laydate.render({
+              elem: '#end' //指定元素
+          });
+      });
+
+      /*删除*/
+      function delete_link(obj,id){
+          layer.confirm('确认要删除吗？',function(index){
+              $.ajax({
+                  url:"{:url('admin/Recommend/delete')}",
+                  type:"POST",
+                  dataType:"json",
+                  data:{
+                      id:id  //id
+                  },
+                  success:function (res) {
+                      if (res === 1){
+                          $(obj).parents("tr").remove();
+                          layer.msg('已删除!',{icon:1,time:1000});
+                      }else {
+                          layer.alert("更新失败", {icon: 5});
+                      }
+                  }
+              });
+          });
+      }
+
+
+  </script>
+</body>
+</html>

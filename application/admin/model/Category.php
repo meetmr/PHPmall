@@ -18,4 +18,8 @@ class Category extends BaseModel
           $cateList = $cate->catetree($cate_list);
           return $cateList;
     }
+    // 闯入分类id、获取商品分类名称
+   public static function getGoodsCategoryName($c_id){
+          return self::where('id','=',$c_id)->value('cate_name');
+    }
 }

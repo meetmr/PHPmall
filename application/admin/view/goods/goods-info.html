@@ -1,0 +1,176 @@
+﻿{include file="public/header" /}
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+<link rel="stylesheet" href="http://yanshi.sucaihuo.com/jquery/21/2137/demo/layer/skin/layer.css" id="layui_layer_skinlayercss" style="">
+<script type="text/javascript" src="/static/layer/layer.js"></script>
+
+<style>
+  a,a:hover{ text-decoration:none;}
+  pre{font-family:'微软雅黑'}
+  .box{padding:20px; background-color:#fff; margin:50px 100px; border-radius:5px;}
+  .box a{padding-right:15px;}
+  #about_hide{display:none}
+  .layer_text{background-color:#fff; padding:20px;}
+  .layer_text p{margin-bottom: 10px; text-indent: 2em; line-height: 23px;}
+  .button{display:inline-block; *display:inline; *zoom:1; line-height:30px; padding:0 20px; background-color:#56B4DC; color:#fff; font-size:14px; border-radius:3px; cursor:pointer; font-weight:normal;}
+  .photos-demo img{width:200px;}
+</style>
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">商品管理</a>
+        <a>
+          <cite>推荐位管理</cite>
+        </a>
+      </span>
+  <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+    <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+
+<div class="x-body" >
+  <xblock>
+    <button class="layui-btn" onclick="x_admin_show('添加商品','{:url(\'admin/Goods/add\')}',1200,500)"><i class="layui-icon"></i>添加</button>
+  </xblock>
+  <div class="container-wrap">
+    <div class="box-1">
+      <table class="layui-table">
+        <thead>
+        <tr>
+        <th style="text-align: center" width="80">商品编号</th>
+          <th style="text-align: center" width="100">商品名称</th>
+          <th style="text-align: center" width="100">商品分类</th>
+          <th style="text-align: center" width="40">商品图片</th>
+          <th style="text-align: center" width="40">商品市场价</th>
+          <th style="text-align: center" width="40">本店价</th>
+          <th style="text-align: center" width="40">是否在售</th>
+          <th style="text-align: center" width="40">库存</th>
+          <th style="text-align: center" width="40">相册</th>
+          <th style="text-align: center" width="40">推荐位</th>
+        <th style="text-align: center" width="50">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      {volist name="goods" id='good'}
+      <tr  style="text-align: center">
+        <td>{$good.goods_code}</td>
+        <td title="{$good.goods_name}">{$good.goods_name|mb_substr=0,10}</td>
+        <td>{$good.category_id|getGoodsCategoryName}</td>
+        <td>
+          <img src="/static/uploads/{$good.og_thumb}" width="20" alt="">
+        </td>
+        <td>{$good.markte_price}</td>
+        <td>{$good.shop_price}</td>
+        <td>
+          {if $good.on_sale == 1}
+          <button class="layui-btn layui-btn-xs" onclick="update_status(this,'{$good.id}','{$good.on_sale}')">在售</button>
+          {else}
+          <button class="layui-btn layui-btn-primary layui-btn-xs" onclick="update_status(this,'{$good.id}','{$good.on_sale}')">下架</button>
+          {/if}
+        </td>
+        <td>{$good.stock}</td>
+        <td><?php $goods_imgs = getGoodsImg($good['id']); ?>
+          <div id="photosDemo{$good.id}" class="photosDemo{$good.id}">
+            {volist name="$goods_imgs" id="imgs"}
+            <img layer-pid="{$imgs.id}"  layer-src="/{$imgs.img_path}" width="30" src="/{$imgs.img_path}" alt="{$good.goods_name}">
+            <script>
+                //使用相册
+                var s = "#photosDemo{$good.id}";
+                    layer.photos({
+                        photos: s
+                    });
+            </script>
+            {/volist}
+          </div>
+        </td>
+        <td>
+          {if $good.recommend_id == 0}
+          不推荐
+          {else}
+          {$good.recommend_id|getGoodsRecommendName}
+          {/if}
+        </td>
+        <td>
+          <a title="编辑" onclick="x_admin_show('修改操作','{:url(\'admin/Goods/editGoods\',[\'id\'=>$good.id])}',1200,500)" href="javascript:;">
+            <i style="color: green" class="layui-icon"></i>
+          </a>
+          <a title="删除" onclick="delete_goods(this,'{$good.id}')" href="javascript:;">
+            <i style="color:red;" class="layui-icon"></i>
+          </a>
+        </td>
+      </tr>
+      {/volist}
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <div class="page">
+    {$goods|raw}
+  </div>
+  <script>
+
+      //更改状态
+      function update_status(obj,id,status) {
+          layer.confirm('确定要更改状态吗？',function(index){
+              $.ajax({
+                  url:"{:url('/admin/Goods/updateStatus')}",
+                  type:"POST",
+                  dataType:"json",
+                  data:{
+                      id:id,  //id
+                      status:status,   //状态
+                      table:"goods",
+                      value:"on_sale"
+                  },
+                  success:function (res) {
+                      if (res === 1){
+                          layer.alert("更新成功", {icon: 6},function () {
+                              window.location.reload();  //刷新父级页面
+                          });
+                      }else {
+                          layer.alert("更新失败", {icon: 5});
+                      }
+                  }
+              });
+          });
+
+      }
+
+      layui.use('laydate', function(){
+          var laydate = layui.laydate;
+          //执行一个laydate实例
+          laydate.render({
+              elem: '#start' //指定元素
+          });
+
+          //执行一个laydate实例
+          laydate.render({
+              elem: '#end' //指定元素
+          });
+      });
+
+      /*删除*/
+      function delete_goods(obj,id){
+          layer.confirm('确认要删除吗？',function(index){
+              $.ajax({
+                  url:"{:url('admin/Goods/delete')}",
+                  type:"POST",
+                  dataType:"json",
+                  data:{
+                      id:id  //id
+                  },
+                  success:function (res) {
+                      if (res === 1){
+                          $(obj).parents("tr").remove();
+                          layer.msg('已删除!',{icon:1,time:1000});
+                      }else {
+                          layer.alert("更新失败", {icon: 5});
+                      }
+                  }
+              });
+          });
+      }
+
+
+  </script>
+</body>
+</html>
