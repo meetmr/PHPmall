@@ -37,4 +37,9 @@ class Category extends BaseModel
         }
         return $goods;
     }
+    // 传入分类id、获取商品分类名称
+    public static function getGoodsCategoryInfo($c_id){
+        return self::where('id','=',$c_id)->field('id,cate_name')->find();
+    }
+
 }

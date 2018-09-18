@@ -13,6 +13,7 @@ use think\Controller;
 use app\admin\model\Conf;
 use app\admin\model\Recommend;
 use app\admin\model\Category;
+use app\admin\model\Article;
 class BaseController extends Controller
 {
     public function initialize()
@@ -20,6 +21,7 @@ class BaseController extends Controller
         $this->getConf();
         $this->getRecommendColumn();
         $this->getCategory();
+        $this->getFooterArts();
     }
 
     // 获取配置信息
@@ -43,6 +45,15 @@ class BaseController extends Controller
         $category = Category::getCategory();
         $this->assign([
             'category'   =>  $category
+        ]);
+    }
+
+    //获取帮助信息
+    public function getFooterArts(){
+        $Article = new Article();
+        $helpCateRes = $Article->getFooterArts();
+        $this->assign([
+            'helpCateRes'   =>  $helpCateRes
         ]);
     }
 }

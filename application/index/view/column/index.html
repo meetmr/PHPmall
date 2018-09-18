@@ -1,67 +1,101 @@
-﻿<!--顶部-->
-{include file='public/head'}
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<title>{$column.name}-PHPMall</title>
+	<meta name="keywords" content="{$column.name}"/>
+	<meta name="description" content="{$column.name}"/>
+	<meta name="viewport" content="width=device-width; initial-scale=1.0" />
+	<link rel="stylesheet" href="/static/index/css/base_1.css" />
+	<link rel="stylesheet" href="/static/index/css/category.css" />
+	<script src="/static/index/js/jquery-2.1.4.min_1.js"></script>
+	<script src="/static/index/js/jquery-migrate-1.2.1.min_1.js"></script>
+	<link type="image/x-icon" href="/public/uploads/cache/images/osc1/store/index-16x16.jpg" rel="icon">
+	<link type="image/x-icon" href="/public/uploads/cache/images/osc1/store/index-16x16.jpg" rel="bookmark">
+</head>
 <body>
-	<div class="com-top-nav w">
+<div class="com-top-nav w">
 	<div class="wcp-wrap">
 	</div>
 </div>
-<!--头部-->
-	{include file='public/header'}
-<!--轮播图-->
-	{include file='public/swiper-container'}
 
-<div class="series-nav w-full">
-	<!--最新商品-->
-	{include file='public/series-nav'}
-</div>
-<div class="produ-selection w">
-	<div class="produ-lists w">
-		<!--商品列表-->
-		{volist name="countGoods" id="vo_count_goods"}
-		<div class="produ-box">
-						<div class="produ-box-content">
-							<a target="_blank" class="produ-img" href="{:url('index/Goods/index',array('id'=>$vo_count_goods.id))}" >
-								<img alt="{$vo_count_goods.goods_name}" width="100%"  src="/static/uploads/{$vo_count_goods.og_thumb}" style="display: inline;">
-								<div class="overburden"></div></a>
-								<div class="produ-classes">
-								<a class="prev hidden" href="javascript:;"></a>
-								<div>
-									<ul>
-										<?php $images = $vo_count_goods['images']; ?>
-										{volist name="images" id="vo_images"}
-										<li class="current">
-											<a data-info="/{$vo_images.img_path}">
-												<img class="loading" src="/{$vo_images.img_path}" style="display: inline;">
-											</a>
-										</li>
-										{/volist}
-									</ul>
+{include file='public/header'}
+<div class="wcp_wrap">
+	<div class="list_crumb">
+		<ul class="list_crumb_list">
+			<li class="classify"><a href="/">首页</a><i class="crumb_arrow"></i></li>
+			<li class="classify">{$column.name}</li>
+		</ul>
+	</div>	
+	
+	<div id="filter" class="selector_box">
+		<div class="selector_info">
+			<h3>
+				<em>产品列表</em> <b> </b>
+			</h3>			
+			<span style="float:right;">搜索到<b>{$count}</b>件商品</span>
+		</div>
+		
+
+	</div>	
+	
+</div>	
+
+<div class="wcp_wrap clearfix">
+
+			<div class="produ-selection w">
+				<div class="produ-lists w">
+
+					{volist name="goods" id="vo_goods"}
+					<div class="produ-box">
+									<div class="produ-box-content">
+										<a target="_blank" class="produ-img"href="{:url('index/Goods/index',array('id'=>$vo_goods.id))}" >
+											<img alt="{$vo_goods.goods_name}"  width="100%"  class="loading" src="/static/uploads/{$vo_goods.og_thumb}" style="display: inline;">
+											<div class="overburden"></div></a>
+											<div class="produ-classes">
+											<a class="prev hidden" href="javascript:;"></a>
+											<div>
+												<ul>
+													<?php $images = $vo_goods['images']; ?>
+													{volist name="images" id="vo_images"}
+													<li class="current">
+														<a data-info="/{$vo_images.img_path}">
+															<img class="loading" src="/{$vo_images.img_path}" style="display: inline;">
+														</a>
+													</li>
+													{/volist}
+												</ul>
+											</div>
+											<a class="next hidden" href="javascript:;"></a>
+										</div>
+										<span class="produ-info">{$vo_goods.goods_name}</span>
+												
+										<span class="produ-price-info "> 
+											<span class="sale-produ-price">&yen; {$vo_goods.shop_price}</span>
+											<span class="del-produ-price">&yen; {$vo_goods.markte_price}</span>
+										</span>										
+									
+										<span class="produ-buy-now">
+											<div class="buy-now color-white section">
+												<p><a href="/goods/10" class="buy-now-btn buy-now-btn-1 buy-now-btn-1b">立刻购买</a></p>
+											</div>
+										</span>
+									</div>
 								</div>
-								<a class="next hidden" href="javascript:;"></a>
+					{/volist}
+
+				</div>
+			</div>
+			<div id="snp" class="snPages">
 							</div>
-							<span class="produ-info">{$vo_count_goods.goods_name|subtext=30}</span>
-
-							<span class="produ-price-info ">&yen; <span class="produ-price">{$vo_count_goods.shop_price}</span></span>
-							<span class="produ-buy-now">
-								<div class="buy-now color-white section">
-									<p><a target="_blank" href="{:url('index/Goods/index',array('id'=>$vo_count_goods.id))}" class="buy-now-btn buy-now-btn-1 buy-now-btn-1b">立刻购买</a></p>
-								</div>
-							</span>
-						</div>
-					</div>
-		{/volist}
-		<!--商品列表end-->
-
-	</div>
-
 </div>
-
-<div class="select-more color-white section">
-			<p><a href="{:url('index/Categorys/index',array('id'=>0))}" target="_blank" class="select-more-btn select-more-btn-1 select-more-btn-1b">选购更多商品&nbsp;&nbsp;»</a></p>
-</div>
-
 <!--底部-->
-	{include file='public/footer'}
+{include file='public/footer'}
+
+
+
 <script>
  var navtoTop = $(".nav").offset().top + $(".nav").height();
     var topNavTop = $(".nav").offset().top;
@@ -137,7 +171,7 @@
 		<div class="sidebar-item user-qrcode-box">
 			<div class="sidebar-logo"></div>
 			<div class="sidebar-tab-tip">
-				<div class="qrcode-img"><img src="/static/index/picture/qrcode-125x125_1.jpg"></div>
+				<div class="qrcode-img"><img src="static/picture/qrcode-125x125_1.jpg"></div>
 				<div class="sidebar-icon">◆</div>
 			</div>
 		</div>
@@ -286,7 +320,7 @@ function get_bonus_card(){
 			dataType: 'html',
 		
 			beforeSend: function() {
-				$('#bonus_card_html').html('<div id="bc_loading">加载中 <img src="/static/index/picture/loading-1_1.gif" /></div>');
+				$('#bonus_card_html').html('<div id="bc_loading">加载中 <img src="static/picture/loading-1_1.gif" /></div>');
 			},
 			complete: function() {
 				
@@ -312,7 +346,7 @@ $('.get_button').live('click', function() {
 			dataType: 'json',
 			type: 'post',		
 			beforeSend: function() {
-				$('#bonus_card_html').html('<div id="bc_loading">加载中 <img src="/static/index/picture/loading-1_1.gif" /></div>');
+				$('#bonus_card_html').html('<div id="bc_loading">加载中 <img src="static/picture/loading-1_1.gif" /></div>');
 			},
 			complete: function() {
 				
@@ -524,6 +558,7 @@ function rchangeQty(increase,cart_id) {
 }		
 //删除购物车商品
 function remove_cart(cart_id){
+	
 	var f=confirm('确认要删除该商品吗？');
 	
 	if(f==false){
@@ -560,6 +595,7 @@ function remove_cart(cart_id){
 }
 //清空浏览记录
 function clear_look(){
+	
 	var f=confirm('确认要清空浏览记录吗？');
 	
 	if(f==false){
@@ -604,34 +640,27 @@ $(".go-to-top").click(function() {
 	}); 	
 </script>
 
-<script src="/static/index/js/common_1.js"></script>
+<script src="static/js/common_1.js"></script>
 
-<link rel="stylesheet" href="/static/index/css/swiper.min_1.css">
-<script src="/static/index/js/swiper.jquery.min_1.js"></script>
 <script>
-$(document).ready(function() {
-var mySwiper = new Swiper('.swiper-container', {
-        nextButton: '.swiper-button-next',
-        prevButton: '.swiper-button-prev',
-        autoplay: 6000,
-        simulateTouch: false,
-        speed: 300,
-        loop: true,
-        pagination: '.swiper-pagination',
-        paginationClickable: true,
-        paginationBulletRender: function(swiper, index, className) {
-            var strs = new Array();
-            for (var i = 0; i < $(".swiper-container .swiper-wrapper").find("div.swiper-slide").length; i++) {
-                strs[i] = $(".swiper-container .swiper-wrapper").find("div.swiper-slide").eq(i).find("a").attr("title");
-            }
-            return '<span class="' + className + '">' + strs[index + 1] + '</span>';
+	$('.more').click(function(){
+		var obj = $(this);
+        if (obj.parents('.selector_line').attr('name') != undefined) {
+            return false;
+        };
+        if (obj.hasClass('current')) {
+            obj.removeClass('current');
+            obj.parents('.selector_line').removeClass('selected').find('.more').html('更多<i></i>');
+            $('.selector_more').find('span').removeClass('current').html('更多<i></i>');
+        } else {
+            obj.addClass('current');
+            obj.parents('.selector_line').addClass('selected').find('.more').html('收起<i></i>');
+            $('.selector_more').find('span').addClass('current').html('收起<i></i>');
         }
-    });	
-});
+	});
 
-
- 
-$(".produ-box .produ-classes>a").each(function() {
+/******产品********/
+	$(".produ-box .produ-classes>a").each(function() {
         $(this).click(function() {
             var lengths = $(this).parent().find("ul li").length;
             var currentStart, currentEnd, srcStr;
@@ -679,8 +708,10 @@ $(".produ-box .produ-classes>a").each(function() {
             $(this).parent().siblings("a.prev").removeClass("hidden");
             $(this).parent().siblings("a.next").removeClass("hidden");
         }
-    });
+    });	
+ 
 
+   
 </script>
 
 </html>

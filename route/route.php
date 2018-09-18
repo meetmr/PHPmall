@@ -9,14 +9,10 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-Route::get('think', function () {
-    return 'hello,ThinkPHP5!';
-});
+// 分类
+Route::rule('category/:id','index/Categorys/index','GET',['ext'=>'html|htm'],['id'=>'\d{1,5}']);
+// 栏目
+Route::rule('column/:id','index/Column/index','GET',['ext'=>'html|htm'],['id'=>'\d{1,5}']);
 
-Route::get('hello/:name', 'admin/hello');
-
-Route::rule('category/:id','index/Categorys/index','GET',['ext'=>'html|htm'],['id'=>'\d{1,3}']);
-
-return [
-
-];
+//商品
+Route::rule('goods/:id','index/Goods/index','GET',['ext'=>'html|htm'],['id'=>'\d{1,5}']);

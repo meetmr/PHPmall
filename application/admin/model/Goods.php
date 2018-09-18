@@ -132,4 +132,34 @@ class Goods extends BaseModel
             return $goods;
         }
     }
+    public static function getCategoryColumnGoods($c_id){
+        $goods = self::where(['on_sale'=>1])->where(['is_delete'=>1])->where(['recommend_id'=>$c_id])->field('id,goods_name,og_thumb,shop_price,markte_price')->select();
+        foreach ($goods as $item) {
+            $ims = getGoodsImg($item['id']);
+            $item['images'] = $ims;
+            // 查询商品相册
+        }
+        return $goods;
+    }
+
+    // 传入商品id、获取商品全部信息。
+    public static function getGoodsInfo($goods_id){
+        $goodsInfo = self::where(['on_sale'=>1])->where(['is_delete'=>1])->where(['id'=>$goods_id])->find();
+        if(!$goodsInfo){
+            echo "<script>location.href='/'</script>";
+        }
+        // 查询商品相册
+        $goodsInfo['images'] =  getGoodsImg($goodsInfo['id']);
+        // 获取商品属性
+        $goodsInfo['product'] = Product::getGoodsProduct($goodsInfo['id']);
+        // 商品的商品分类信息
+        $goodsInfo['category'] = Category::getGoodsCategoryInfo($goodsInfo['category_id']);
+        return $goodsInfo;
+    }
+
+    // 传入商品id 获取商品的库存
+    public static function getGoodsStock($goods_id){
+        return $goodsInfo = self::where(['id'=>$goods_id])->value('stock');
+
+    }
 }

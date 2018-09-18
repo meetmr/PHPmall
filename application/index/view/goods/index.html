@@ -1,73 +1,116 @@
-﻿<!--顶部-->
-{include file='public/head'}
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<title>PHPMall {$goodsInfo.goods_name}</title>
+	<meta name="keywords" content=""/>
+	<meta name="description" content=""/>
+	<meta name="viewport" content="width=device-width; initial-scale=1.0" />	
+	<link rel="stylesheet" href="/static/index/css/base_1.css" />
+	<link rel="stylesheet" href="/static/index/css/goods.css" />
+	<script src="/static/index/js/jquery-2.1.4.min_1.js"></script>
+	<script src="/static/index/js/jquery-migrate-1.2.1.min_1.js"></script>
+	<script src="/static/layer/layer.js"></script>
+	<link type="image/x-icon" href="/public/uploads/cache/images/osc1/store/index-16x16.jpg" rel="icon">
+	<link type="image/x-icon" href="/public/uploads/cache/images/osc1/store/index-16x16.jpg" rel="bookmark">
+</head>
 <body>
 	<div class="com-top-nav w">
 	<div class="wcp-wrap">
 	</div>
 </div>
-<!--头部-->
 	{include file='public/header'}
-<!--轮播图-->
-	{include file='public/swiper-container'}
-
-<div class="series-nav w-full">
-	<!--最新商品-->
-	{include file='public/series-nav'}
-</div>
-<div class="produ-selection w">
-	<div class="produ-lists w">
-		<!--商品列表-->
-		{volist name="countGoods" id="vo_count_goods"}
-		<div class="produ-box">
-						<div class="produ-box-content">
-							<a target="_blank" class="produ-img" href="{:url('index/Goods/index',array('id'=>$vo_count_goods.id))}" >
-								<img alt="{$vo_count_goods.goods_name}" width="100%"  src="/static/uploads/{$vo_count_goods.og_thumb}" style="display: inline;">
-								<div class="overburden"></div></a>
-								<div class="produ-classes">
-								<a class="prev hidden" href="javascript:;"></a>
-								<div>
-									<ul>
-										<?php $images = $vo_count_goods['images']; ?>
-										{volist name="images" id="vo_images"}
-										<li class="current">
-											<a data-info="/{$vo_images.img_path}">
-												<img class="loading" src="/{$vo_images.img_path}" style="display: inline;">
-											</a>
-										</li>
-										{/volist}
-									</ul>
-								</div>
-								<a class="next hidden" href="javascript:;"></a>
-							</div>
-							<span class="produ-info">{$vo_count_goods.goods_name|subtext=30}</span>
-
-							<span class="produ-price-info ">&yen; <span class="produ-price">{$vo_count_goods.shop_price}</span></span>
-							<span class="produ-buy-now">
-								<div class="buy-now color-white section">
-									<p><a target="_blank" href="{:url('index/Goods/index',array('id'=>$vo_count_goods.id))}" class="buy-now-btn buy-now-btn-1 buy-now-btn-1b">立刻购买</a></p>
-								</div>
-							</span>
+<div class="wcp_wrap">
+	<div class="list_crumb">
+		<ul class="list_crumb_list">
+			<li class="classify"><a href="/">首页</a><i class="crumb_arrow"></i></li>
+					<li class="classify">
+							<a  href="{:url('index/Categorys/index',array('id'=>$goodsInfo.category.id))}"  >{$goodsInfo.category.cate_name}</a>
+							<i class="crumb_arrow"></i>
+					</li>
+			<li><a href="javascript:;">{$goodsInfo.goods_name}</a></li>
+		</ul>
+	</div>
+	<div class="detail-ctr clearfix">
+		<div class="dtl-info clearfix">
+			<div class="preview">					
+					<div class="smallImg">
+						<div id="imageMenu">
+							<ul id="images_0"  >
+								{volist name="$goodsInfo.images" id="images"}
+								<li data-bimg="/{$images.img_path}">
+									<img width="100%" src="/{$images.img_path}" />
+								</li>
+								{/volist}
+							</ul>
 						</div>
 					</div>
-		{/volist}
-		<!--商品列表end-->
+					<div class="bigImg" id="vertical">
+						<img width="600" height="600" style= "margin-top:0px;" id="midimg" class="loading" src="" />
+					</div>
+			</div>
+			<div class="pro-info-dtl">
+				<div class="pro-detail-hd">
+					<h1>
+						<span class="fl">{$goodsInfo.goods_name} </span><span class="exp-style">货号：<span id="sn">{$goodsInfo.goods_code}</span></span>
+					</h1>
+					<a class="start-comment" href="javascript:;"></a>
+				</div>
+				<div class="pro-sales-list">
+							<p class="pro-sales-item">
+								<b class="c-red">&yen; </b><b class="current_price c-red">{$goodsInfo.shop_price}</b>
+							</p>
+							<p class="pro-sales-item">市场价：<span id="market-price">&yen; {$goodsInfo.markte_price}</span></p>
+												
+						<p class="pro-sales-item">库存量：<span id="store_quantity">{$goodsInfo.stock}</span> </p>
+				
+				</div>
+				<!--规格-->
+				<div id="selectbox" class="selectbox">
+					<dl class="spec-item clearfix">
+						{volist name="$goodsInfo.product" id="product"}
+						<dt>{$product.name}：<span>{$product.detail}</span></dt>
+						{/volist}
+					</dl>
+				</div>
+				<!--规格-->
+				<div class="sumbox">
+					<div class="select_number">	
+						<input type="text" onkeyup='change_quantity("{$goodsInfo.id}",this);' name="quantity" size="2" value="1" id="quantity" class="text">
+						<button onclick='changeQty(1,"{$goodsInfo.id}");' class="increase">+</button>
+						<button onclick='changeQty(0,"{$goodsInfo.id}");' class="decrease">-</button>
+					</div>
+					<div class="buttonbox">
+							 <input type="button" value="加入购物车" class="dtl-cart buy"  ctype='1l8krlkgzy'>
+							 <input type="button" value="立即购买" rel="buy" class="buy" style="background-color: #d00;"  ctype='p80xgpxoq1'>
+					</div>
+				</div>
+			
+		</div>			
+	</div>
+	<div class="maybe-like">
 
 	</div>
-
+	<div class="pro-dtl-ctr">
+				<div class="pro-dtl-menu">
+					<a class="current" href="javascript:;">产品细节 <i></i></a> <a href="javascript:;" class="">商品评价 <i></i></a>
+				</div>
+				<div class="detail-box" style="display: block;">
+					<?php echo $goodsInfo['goods_des'];?>
+				</div>
+	</div>
 </div>
-
-<div class="select-more color-white section">
-			<p><a href="{:url('index/Categorys/index',array('id'=>0))}" target="_blank" class="select-more-btn select-more-btn-1 select-more-btn-1b">选购更多商品&nbsp;&nbsp;»</a></p>
 </div>
-
-<!--底部-->
+	<!--底部-->
 	{include file='public/footer'}
 <script>
  var navtoTop = $(".nav").offset().top + $(".nav").height();
     var topNavTop = $(".nav").offset().top;
     $(".right-sidebar").css('top', topNavTop + 'px');
     $(".go-to-top").fadeOut(100);
-    
+
     $(window).scroll(function() {
         var scrollHeight = $(window).scrollTop();
         if (scrollHeight <= navtoTop) {
@@ -82,7 +125,7 @@
             $(".go-to-top").fadeIn(100);
             $(".right-sidebar .account-box").css('bottom', '0');
             $(".all-styles-tab").hide();
-            
+
             $(".fixed-nav .main-nav .all-styles").hover(function() {
                 $(this).find(".all-styles-tab").show();
             },
@@ -91,29 +134,24 @@
             });
             $(".sidebar-box .like-show-more,.sidebar-box .saw-show-more").css('margin-bottom', topNavTop + 'px');
         }
-    });	
-	     	
+    });
+
 </script>
-	
-
-
-
-	
 <div class="right-sidebar clearfix">
 	<div class="sidebar-list">
-		
+
 		<div onclick="get_cart_list();" box="cart_box" class="sidebar-item box user-cart-box">
 			<div class="sidebar-logo"></div>
 			<div class="sidebar-txt">购物车</div>
-		
+
 		</div>
-		
+
 		<div onclick="get_bonus_card();" box="bonus_card_box" class="sidebar-item box user-bonus-card-box">
 
 			<div class="sidebar-logo"></div>
 			<div class="sidebar-tab-tip">优惠券<div class="sidebar-icon">◆</div></div>
 		</div>
-		
+
 		<div onclick="get_like_data();" box="like_box" class="sidebar-item box user-like-box">
 
 			<div class="sidebar-logo"></div>
@@ -141,59 +179,59 @@
 				<div class="sidebar-icon">◆</div>
 			</div>
 		</div>
-		<a class="go-to-top" href="javascript:;"></a>			
+		<a class="go-to-top" href="javascript:;"></a>
 	</div>
-	
-	
-	
+
+
+
 	<div class="sidebar-box">
-		
-		
-		
+
+
+
 		<div id="cart_box" class="sidebar-cart-box sidebar-box-item hide">
-			
+
 			<h3 class="saw-title clearfix">
 				<a class="title-close sidebar-box-close" href="javascript:;"></a><span>购物车</span>
 			</h3>
 			<div class="cart-table-box">
 			<table class="cart-table">
 				<tbody>
-					
+
 				</tbody>
 			</table>
 			</div>
 			<div class="account-box hide">
-				
+
 				<a class="to-settlement" href="/checkout/goods/all">去结算</a>
 			</div>
-			
-			
+
+
 			<div class="tip-text hide">
-			
+
 				购物车空空的，赶快去挑选心仪的商品吧~
 				<a href="/categorys">去看看吧</a>
 			</div>
 		</div>
-		
+
 		<div id="bonus_card_box" class="sidebar-like-box sidebar-box-item hide">
 			<h3 class="like-title clearfix">
 				<a class="title-close sidebar-box-close" href="javascript:;"></a><span>我的优惠券</span>
 			</h3>
-			
+
 			<div id="bonus_card_html">
-				
-	       		
-				
-			</div>	
+
+
+
+			</div>
 		</div>
-		
-		
+
+
 		<div id="like_box" class="sidebar-like-box sidebar-box-item hide">
 			<h3 class="like-title clearfix">
 				<a class="title-close sidebar-box-close" href="javascript:;"></a><span>我的收藏</span>
 			</h3>
 		<div class="like-content hide">
-	          
+
 	           <ul class="like-lists clearfix">
                </ul>
               <a  class="like-show-more show-more-item" href="/member/wishlist/index"><span>查看更多</span><i></i></a>
@@ -208,36 +246,87 @@
 				<a href="/categorys">去看看吧</a>
 			</div>
 		</div>
-		
 
-		
+
+
 		<div id="saw_box" class="sidebar-saw-box sidebar-box-item hide">
 			<h3 class="saw-title clearfix">
 				<a class="title-close sidebar-box-close" href="javascript:;"></a><span>最近浏览</span>
 			</h3>
 			<div class="saw-content">
                <span class="saw-total"><span class="saw-total-num">0</span>件商品</span>
-               
+
             </div>
 			<div id="look_content" class="saw-content hide">
                <span class="saw-total"><span class="saw-total-num">0</span>件商品</span><a class="saw-clean" onclick="clear_look()" href="javascript:;">清空</a>
                <ul class="saw-lists clearfix">
                </ul>
-            
+
             </div>
-			
-			
+
+
 		</div>
 	</div>
 </div>
 <script>
+ // 更改数量
+ function changeQty(num,goods_id) {
+     // 获取现有的数量
+	 var quantity = $("#quantity").val();
+	 if (num === 0){
+       	if(quantity == 1 || quantity < 1){
+            layer.alert('最小起订量是1 件');
+            $("#quantity").val(1);
 
-function go_login(){
-	$(".right-sidebar .sidebar-item").parent().parent().animate({right: "-280px"});
-    flag = 0;
-    location='/login';
-}
+            return ;
+		}else {
+             $("#quantity").val(quantity-1);
+		}
+	 }else {
+	      // 通过ajax请求 查询商品库存。
+         $.ajax({
+             url:"{:url('index/Goods/getGoodsStock')}",
+             type:"POST",
+             dataType:"json",
+             data:{
+                 goods_id:goods_id
+             },
+             success:function (res) {
+				if(quantity >= res){
+					layer.alert('该商品数量不足，剩余 '+ res+' 件')
+                    $("#quantity").val(res);
+				}else {
+                    $("#quantity").val(parseInt(quantity) + 1);
+                }
+             }
+         });
 
+     }
+ }
+ function change_quantity(goods_id,obj) {
+     var quantity = $(obj).val();
+     if(quantity<1){
+         $("#quantity").val(1);
+	 }
+	 if(isNaN(quantity)){
+         $("#quantity").val(1);
+	 }
+     // 通过ajax请求 查询商品库存。
+     $.ajax({
+         url:"{:url('index/Goods/getGoodsStock')}",
+         type:"POST",
+         dataType:"json",
+         data:{
+             goods_id:goods_id
+         },
+         success:function (res) {
+             if(quantity > res){
+                 layer.alert('该商品数量不足，剩余 '+ res+' 件')
+                 $("#quantity").val(res);
+             }
+         }
+     });
+ }
 var cur_action=null;
 var last_action=null;
 var flag=0;
@@ -273,171 +362,8 @@ $('.sidebar-box-close').click(function(){
 	$('.right-sidebar').animate({right: "-280px"},'fast');	
 });
 
-//优惠券列表
-function get_bonus_card(){
-	
-	var id=$('.user-bonus-card-box').attr('box');
-	
-	right_sidebar_animate(id);	
-	
-	if(flag==1)
-	$.ajax({
-			url: '/Api/Home/bonus_card_list',			
-			dataType: 'html',
-		
-			beforeSend: function() {
-				$('#bonus_card_html').html('<div id="bc_loading">加载中 <img src="/static/index/picture/loading-1_1.gif" /></div>');
-			},
-			complete: function() {
-				
-			},
-			success: function(html) {
-				
-				setTimeout(function (){
-						$('#bonus_card_html').html(html);
-				}, 500);	
-				
-			}
-	});
 
-}
-/*领取优惠券*/
-$('.get_button').live('click', function() {
-	
-	$.ajax({
-			url: '/Api/Home/get_bonus_card',	
-			data:{
-				id:$(this).attr('bc_id')
-			},		
-			dataType: 'json',
-			type: 'post',		
-			beforeSend: function() {
-				$('#bonus_card_html').html('<div id="bc_loading">加载中 <img src="/static/index/picture/loading-1_1.gif" /></div>');
-			},
-			complete: function() {
-				
-			},
-			success: function(d) {
-				
-				if(d.error){
-					alert(d.error);
-				}else{
-					$.ajax({
-							url: '/Api/Home/bonus_card_list',			
-							dataType: 'html',
-						
-							beforeSend: function() {
-								
-							},
-							complete: function() {
-								
-							},
-							success: function(html) {
-								
-								$('#bonus_card_html').html(html);
-								
-							}
-					});
-				}
-				
-			}
-	});
-});
 
-//最近浏览的商品
-function get_look_data(){
-	
-	var id=$('.user-saw-box').attr('box');
-	
-	right_sidebar_animate(id);	
-	if(flag==1)
-	$.ajax({
-			url: '/Api/Home/get_look_data',			
-			dataType: 'json',
-			type: 'post',
-			beforeSend: function() {
-				
-			},
-			complete: function() {
-				
-			},
-			success: function(data) {
-				
-				if(data.success){		
-																		
-					var result = '';
-		            if (data.count == 0) {
-		                $("#saw_box .tip-text").removeClass("hide");
-		            }else{
-		            	
-		            	$('.saw-total-num').text(data.count);
-		            	$('.saw-content').addClass('hide');
-		            	
-		            	$('#look_content').removeClass("hide");
-		            	
-		            	 $.each(data.list,
-			            function(i, item) {
-			                result += '<li><a href="' + item.url + '" target="_blank"><img src="' + item.image + '" alt="' + item.name + '"><p>￥' + item.price + '</p></a></li>';
-			            });
-			            $("#look_content ul").html(result);
-		            }
-		        }else{
-		        	
-		        	if(data.error=='no_login'){
-		        		$('#saw_box .like-alert').removeClass('hide');
-		        	}	        	
-		        	
-		        } 
-				
-			}
-	});	
-}
-//收藏的商品
-function get_like_data(){
-	
-	var id=$('.user-like-box').attr('box');
-	
-	right_sidebar_animate(id);	
-	if(flag==1)
-	$.ajax({
-			url: '/Api/Home/get_like_list',			
-			dataType: 'json',
-			type: 'post',
-			beforeSend: function() {
-				
-			},
-			complete: function() {
-				
-			},
-			success: function(data) {
-				
-				if(data.success){		
-																		
-					var result = '';
-		            if (data.count == 0) {
-		                $("#like_box .tip-text").removeClass("hide");
-		            }else{
-		            	
-		            	
-		            	$('#like_box .like-content').removeClass("hide");
-		            	
-		            	 $.each(data.list,
-			            function(i, item) {
-			                result += '<li><a href="' + item.url + '" target="_blank"><img src="' + item.image + '" alt="' + item.name + '"><p>￥' + item.price + '</p></a></li>';
-			            });
-			            $("#like_box .like-content ul").html(result);
-		            }
-		        }else{
-		        	
-		        	if(data.error=='no_login'){
-		        		$('#like_box .like-alert').removeClass('hide');
-		        	}	        	
-		        	
-		        } 
-				
-			}
-	});
-}	
 //购物车商品
 function get_cart_list(){
 	
@@ -456,8 +382,6 @@ function get_cart_list(){
 				
 			},
 			success: function(data) {
-				
-										
 					var result = '';
 		            if (data.count == 0) {
 		                $(".sidebar-cart-box .tip-text").removeClass("hide");
@@ -529,7 +453,6 @@ function remove_cart(cart_id){
 	if(f==false){
 		return false;
 	}
-	
 	$.post(
 		'/api/Home/remove_cart',	
 		{cart_id:cart_id},	
@@ -558,32 +481,6 @@ function remove_cart(cart_id){
 		}
 	);
 }
-//清空浏览记录
-function clear_look(){
-	var f=confirm('确认要清空浏览记录吗？');
-	
-	if(f==false){
-		return false;
-	}
-	
-	$.ajax({
-			url: '/Api/Home/clear_look',			
-			dataType: 'json',
-			type: 'post',
-			beforeSend: function() {
-				
-			},
-			complete: function() {
-				
-			},
-			success: function(data) {					
-				$('#look_content').addClass("hide");
-				$('.saw-content	').removeClass("hide");	
-				$('.saw-total-num').text(0);
-			}
-	});
-}
-
 $(".right-sidebar .sidebar-item").each(function() {
 	
     $(this).hover(function() {
@@ -606,80 +503,24 @@ $(".go-to-top").click(function() {
 
 <script src="/static/index/js/common_1.js"></script>
 
-<link rel="stylesheet" href="/static/index/css/swiper.min_1.css">
-<script src="/static/index/js/swiper.jquery.min_1.js"></script>
+<script src="/static/index/js/jquery.raty.min.js"></script>
 <script>
-$(document).ready(function() {
-var mySwiper = new Swiper('.swiper-container', {
-        nextButton: '.swiper-button-next',
-        prevButton: '.swiper-button-prev',
-        autoplay: 6000,
-        simulateTouch: false,
-        speed: 300,
-        loop: true,
-        pagination: '.swiper-pagination',
-        paginationClickable: true,
-        paginationBulletRender: function(swiper, index, className) {
-            var strs = new Array();
-            for (var i = 0; i < $(".swiper-container .swiper-wrapper").find("div.swiper-slide").length; i++) {
-                strs[i] = $(".swiper-container .swiper-wrapper").find("div.swiper-slide").eq(i).find("a").attr("title");
-            }
-            return '<span class="' + className + '">' + strs[index + 1] + '</span>';
-        }
-    });	
+
+
+
+$(function(){
+	$('#imageMenu ul:first li:first').trigger('click');
+});
+//图册缩略图点击
+$('#imageMenu li').click(function(){
+	$('#imageMenu li').removeClass('click');
+	$(this).addClass('click');
+	var src=$(this).attr('data-bimg');
+	$("#midimg").attr("src", src);
 });
 
 
- 
-$(".produ-box .produ-classes>a").each(function() {
-        $(this).click(function() {
-            var lengths = $(this).parent().find("ul li").length;
-            var currentStart, currentEnd, srcStr;
-            for (var i = 0; i < lengths; i++) {
-                if ($(this).parent().find("ul li").eq(i).hasClass("current")) {
-                    currentStart = i;
-                    break;
-                }
-            }
-            currentEnd = currentStart + 4;
-            if ($(this).hasClass("prev")) {
-                if (currentStart > 0) {
-                    $(this).parent().find("ul li").eq(currentStart - 1).removeClass("hide").addClass("current");
-                    $(this).parent().find("ul li").eq(currentEnd).removeClass("current").addClass("hide");
-                    srcStr = $(this).parent().find("ul li").eq(currentStart - 1).attr("data-info");
-                    $(this).parent().parent().find(".produ-img img").attr("src", srcStr);
-                }
-            } else if ($(this).hasClass("next")) {
-                if (currentEnd < (lengths - 1)) {
-                    $(this).parent().find("ul li").eq(currentEnd + 1).removeClass("hide").addClass("current");
-                    $(this).parent().find("ul li").eq(currentStart).removeClass("current").addClass("hide");
-                    srcStr = $(this).parent().find("ul li").eq(currentStart + 1).attr("data-info");
-                    $(this).parent().parent().find(".produ-img img").attr("src", srcStr);
-                }
-            }
-        })
-    });
-    $(".produ-classes ul li.current a").each(function() {
-        var srcStr, $img;
-        $img = $(this).parent().parent().parent().parent().parent().find(".produ-img img");
-        srcStr = $img.attr("src");
-        $(this).hover(function() {
-            $img.attr("src", $(this).attr("data-info"));
-        },
-        function() {
-            $img.attr("src", srcStr);
-        })
-    });
-    $(".produ-classes ul").each(function() {
-        var lengths1 = $(this).find("li").length;
-        if (lengths1 <= 5) {
-            $(this).parent().siblings("a.prev").addClass("hidden");
-            $(this).parent().siblings("a.next").addClass("hidden");
-        } else {
-            $(this).parent().siblings("a.prev").removeClass("hidden");
-            $(this).parent().siblings("a.next").removeClass("hidden");
-        }
-    });
+
 
 </script>
 

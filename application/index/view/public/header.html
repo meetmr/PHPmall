@@ -38,16 +38,13 @@
             <!-- 左侧导航条 END -->
             <!-- 横向导航条 -->
             <ul class="line-nav clearfix">
-
-
                 <li class="item">
                     <a href="/">首页</a>
                 </li>
-
                 <!-- 首页栏目-->
                 {volist name="recommend" id="vo_recommend"}
                 <li class="item">
-                    <a href="/sale">{$vo_recommend.name}</a>
+                    <a href="{:url('index/Column/index',array('id'=>$vo_recommend.id))}">{$vo_recommend.name}</a>
                 </li>
                 {/volist}
                 <!-- 首页栏目end-->

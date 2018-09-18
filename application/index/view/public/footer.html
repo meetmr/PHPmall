@@ -1,43 +1,20 @@
 <div class="footer">
     <div class="serverbox w clearfix">
         <ul class="server-list clearfix">
+            {volist name= "helpCateRes" id="cate"}
             <li class="item-first">
-                <h4>平台公告</h4>
-                <a href="/article/12">关于中秋放假公告 </a>
-                <a href="/article/11">关于平台晒单公告 </a>
-                <a href="/article/10">防台风“鲇鱼”--配送延迟公告 </a>
-                <a href="/article/1">关于双11配送延迟 </a>
+                <h4>{$cate.cate_name}</h4>
+                {volist name="cate.arts" id="art"}
+                <a  href="{if condition ="$art['link_url']"} {$art.link_url}{else/}{:url('index/Article/index',array('id'=>$art['id']))}{/if}">{$art.title} </a>
+                {/volist}
             </li>
-            <li>
-                <h4>新手帮助</h4>
-                <a href="/article/8">退换货说明</a>
-                <a href="/article/7">售后政策</a>
-                <a href="/article/6">在线支付</a>
-                <a href="/article/5">预存款使用说明</a>
-                <a href="/article/4">积分说明</a>
-                <a href="/article/3">购物流程</a>
-            </li>
-            <li>
-                <h4>售后服务</h4>
-                <a href="/article/19">如何办理退换货</a>
-                <a href="/article/18">退款详细说明</a>
-                <a href="/article/17">退换货政策说明</a>
-            </li>
-            <li>
-                <h4>关于我们</h4>
-                <a href="/article/23">人才招聘</a>
-                <a href="/article/22">联系我们</a>
-                <a href="/article/20">关于我们</a>
-            </li>
+            {/volist}
         </ul>
         <div class="custom-service">
             <h4>在线咨询</h4>
-            <span class="server-tel">400-881-8283</span>
-            <a href="http://wpa.qq.com/msgrd?v=3&amp;uin=1093157171&amp;site=qq&amp;menu=yes" target="_blank" class="server-btn"><i class="icon icon-zxkf"></i><span>在线客服</span></a>
-            <h4>微信公众号</h4>
-            <a class="weixin-code" href="javascript:;">
-                <img src="/static/index/picture/qrcode-90x90_1.jpg" />
-            </a>
+            <span class="server-tel">{$confRes.zixuan}</span>
+            <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$confRes.qq}&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:{$confRes.qq}:51" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+
         </div>
     </div>
 
