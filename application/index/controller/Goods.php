@@ -10,6 +10,7 @@ namespace app\index\controller;
 
 use app\admin\model\Goods as GoodesModel;
 use think\facade\Request;
+use app\admin\model\Category;
 class Goods extends BaseController
 {
     public function index($id){
@@ -26,5 +27,21 @@ class Goods extends BaseController
     public function getGoodsStock(){
        $goods_id = Request::post('goods_id');
        return json(GoodesModel::getGoodsStock($goods_id));
+    }
+
+    // 搜索
+    public function search($key=''){
+        $Category = Category::getCategoryErJi(); //生成二级分类
+        $goodsInfo = GoodesModel::getKeyGoodsInfo($key);
+        $count = $goodsInfo->count();
+        $id = 0;
+        $this->assign([
+            'category'  =>  $Category,
+            'goods'     =>  $goodsInfo,
+            'count'     =>  $count,
+            'id'        =>  $id,
+            'title'     =>  '搜索 '.$key
+        ]);
+        return $this->fetch();
     }
 }

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>PHPMall-用户注册</title>
+    <link rel="stylesheet" href="/static/login/css/base_1.css"/>
+    <link rel="stylesheet" href="/static/login/css/register.css"/>
+    <script src="/static/index/js/jquery-2.1.4.min_1.js"></script>
+    <script src="/static/layer/layer.js"></script>
+</head>
+<body>
+<div id="main">
+    <div id="header">
+    </div>
+    <div class="container">
+        <div class="bgPic"><img src="/static/login/picture/b2_1.jpg" alt=""/></div>
+        <div class="register">
+            <div class="title">
+                <span>注册</span>
+                <a href="{:url('user/Login/login')}">去登录</a>
+            </div>
+            <form autocomplete="off" >
+                <div class="default">
+                    <input id="uname" name="uname" data-form="uname" type="text" placeholder="用户名" value="admin" />
+                </div>
+                <div class="default">
+                    <input id="email" name="email" data-form="email" type="text" placeholder="邮箱" value="1781634625@qq.com"/>
+                </div>
+                <div class="default">
+                    <input id="upwd" name="upwd" data-form="upwd" type="password" placeholder="请输入6-16为密码" value="123456"/>
+                </div>
+                <div class="default">
+                    <input id="upwd_2" data-form="upwd_2" type="password" placeholder="确认密码" value="123456"/>
+                </div>
+
+                <div class="submit">
+                        <span class="notice">点击"注册"代表您同意遵守
+                            <a href="#">用户协议</a>
+                            和
+                            <a href="#">隐私条款</a>
+                        </span>
+                    <button type="button" class="s_hover" onclick="reg()">注册</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function reg() {
+        // 用户名
+        var uname = $("#uname").val();
+        var upwd = $("#upwd").val();
+        var upwd_2 = $("#upwd_2").val();
+        var email = $("#email").val();
+        var reg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"); //正则表达式
+        //用户名正则，4到16位（字母，数字，下划线，减号）
+        var uPattern = /^[a-zA-Z0-9_-]{5,16}$/;
+        var pass = /^\w{6,16}$/;
+
+        if(!uPattern.test(uname)){
+            layer.msg('用户名不正确', {
+                icon: 5,
+                skin: 'layer-ext-moon'
+            });
+            return;
+        }
+        if(!reg.test(email)){
+            layer.msg('邮箱格式不对哦', {
+                icon: 5,
+                skin: 'layer-ext-moon'
+            });
+            return;
+        }
+        if(upwd=='' || !pass.test(upwd)){
+            layer.msg('请输入6-16位密码', {
+                icon: 5,
+                skin: 'layer-ext-moon'
+            });
+            return;
+        }
+        if(upwd !== upwd_2){
+            layer.msg('确认密码格式不对哦', {
+                icon: 5,
+                skin: 'layer-ext-moon'
+            });
+            return;
+        }
+
+        var url = "{:url('user/Login/HandleRegister')}";
+        var postData ={"uname":uname,"upwd":upwd,'email':email,'upwd_2':upwd_2};
+        $.post(url,postData,function (result) {
+            if(result.error === 1 ){
+                layer.alert(result.msg,function () {
+                    location.href = "{:url('user/Login/login')}";
+                });
+            }else {
+                layer.msg(result.msg, {
+                    icon: 5,
+                    skin: 'layer-ext-moon',
+                });
+
+            }
+        },"json")
+
+    }
+</script>
+</body>
+</html>

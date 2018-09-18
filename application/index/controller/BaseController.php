@@ -22,6 +22,7 @@ class BaseController extends Controller
         $this->getRecommendColumn();
         $this->getCategory();
         $this->getFooterArts();
+        $this->key();
     }
 
     // 获取配置信息
@@ -54,6 +55,15 @@ class BaseController extends Controller
         $helpCateRes = $Article->getFooterArts();
         $this->assign([
             'helpCateRes'   =>  $helpCateRes
+        ]);
+    }
+
+    // 搜索关键字显示
+    public function key(){
+        $conf = Conf::getConf();
+        $confKey = explode(',',$conf['shousou']);
+        $this->assign([
+            'confKey'   =>  $confKey
         ]);
     }
 }

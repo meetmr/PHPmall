@@ -5,19 +5,12 @@
         <p class="logo-box" id="login">
             <a href="/member/order_member/index">欢迎您，13541817746</a>|
             <a href="/logout">退出</a>
+            <a href="{:url('user/Login/login')}">登录</a>|
+            <a href="{:url('user/Login/register')}">注册</a>
         </p>
         <ul class="quick-menu clearfix">
             <li class="first-item">
                 <a href="/kuaidi">订单查询</a>|</li>
-
-            <li class="mobile-btn">
-                <i class="icon icon-phone"></i>
-                <a>手机商城</a>|
-                <div class="mobile-shop hide">
-                    <img src="/static/index/picture/qrcode-125x125_1.jpg">
-                </div>
-            </li>
-
             <li><i class="icon icon-cart"></i>
                 <a class="" href="/cart">购物车<span class="cart-num">(4)</span>件</a></li>
         </ul>
@@ -52,23 +45,18 @@
             <!-- 横向导航条 END -->
             <div class="nav-search">
                 <input type="text"  name="key" class="nav-search-input" id="search_box" value="" >
-                <a id="search" url="/search" class="nav-search-btn"></a>
+                <a id="search" url="{:url('index/goods/search')}" class="nav-search-btn"></a>
                 <!--搜索热词-->
                 <div class="suggestion">
                     <div class="hotwords">
                         <ul class="hotwords-list">
-                            <li><a href="/search?key=鞋">鞋</a></li>
-                            <li><a href="/search?key=柴烧">柴烧</a></li>
-                            <li><a href="/search?key=茶具">茶具</a></li>
-                            <li><a href="/search?key=百搭T恤">百搭T恤</a></li>
-                            <li><a href="/search?key=鞋城共舞">鞋城共舞</a></li>
-                            <li><a href="/search?key=爱尚运动">爱尚运动</a></li>
-                            <li><a href="/search?key=10月大放价">10月大放价</a></li>
+                            <?php foreach($confKey as $key):?>
+                            <li><a href="{:url('index/goods/search')}?key={$key}">{$key}</a></li>
+                            <?php endforeach;?>
                         </ul>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 

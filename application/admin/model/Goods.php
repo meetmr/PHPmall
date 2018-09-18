@@ -160,6 +160,19 @@ class Goods extends BaseModel
     // 传入商品id 获取商品的库存
     public static function getGoodsStock($goods_id){
         return $goodsInfo = self::where(['id'=>$goods_id])->value('stock');
+    }
 
+    // 传入关键字、模糊查询商品
+    public static function getKeyGoodsInfo($key){
+        $goods = self::where(['on_sale'=>1])->where(['is_delete'=>1])->where('goods_name','like','%'.$key.'%')->select();
+        if(!$goods){
+            return [];
+        }
+        foreach ($goods as $item) {
+            $ims = getGoodsImg($item['id']);
+            $item['images'] = $ims;
+            // 查询商品相册
+        }
+        return $goods;
     }
 }
