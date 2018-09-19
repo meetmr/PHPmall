@@ -22,4 +22,9 @@ class User extends BaseModel
     public static function seeUserEmail($email){
         return self::where(['email'=>$email])->select()->count() == true ? true : false;
     }
+
+    // 传入用户名密码 判断是否正确
+    public static function loinUser($username,$password){
+        return self::where(['username'=>$username])->where(['password'=>md5($password)])->find();
+    }
 }

@@ -12,6 +12,7 @@ namespace app\user\controller;
 use think\Controller;
 use think\facade\Request;
 use app\admin\model\User;
+use think\facade\Session;
 class Login extends Controller
 {
     public function register(){
@@ -77,10 +78,50 @@ class Login extends Controller
                 return json($state);
             }
         }
+        return 0;
     }
 
     // 登陆
     public function login(){
         return $this->fetch();
+    }
+
+    public function HandleLogin(){
+        // 处理登陆
+        if(Request::isAjax()){
+            $data = Request::post();
+            $user = User::loinUser($data['uname'],$data['upwd']);
+            // 判断用户名是否注册
+            if(!User::seeUserName($data['uname'])){
+                $state = [
+                    'error' => 0,
+                    'msg'=> '用户名没有注册'
+                ];
+                return json($state);
+            }
+
+            // 判断密码是否正确
+            if(!$user){
+                $state = [
+                    'error' => 0,
+                    'msg'=> '密码错误'
+                ];
+                return json($state);
+            }
+            // 登陆成功
+            session('user',$user);  // 写入session
+            $state = [
+                'error' => 1,
+                'msg'=> '登陆成功'
+            ];
+            return json($state);
+        }
+    }
+
+    // 退出登陆
+    public function logout(){
+        // 清除session
+        Session::clear();
+        $this->redirect('/');
     }
 }

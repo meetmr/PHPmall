@@ -11,5 +11,8 @@ namespace app\user\controller;
 
 class User extends BaseController
 {
-
+    // 展示个人中心
+    public function member(){
+        return $this->fetch();
+    }
 }

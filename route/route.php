@@ -9,6 +9,7 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+use think\facade\Route;
 // 分类
 Route::get('category/:id','index/Categorys/index',['ext'=>'html|htm'],['id'=>'\d{1,5}']);
 // 栏目
@@ -24,3 +25,8 @@ Route::get('search','index/Goods/search',['ext'=>'html|htm']);
 Route::get('reg','user/Login/register',['ext'=>'html|htm']);
 // 用户登陆
 Route::get('login','user/Login/login',['ext'=>'html|htm']);
+
+
+// 用户管理
+
+Route::get('user/member','user/user/member',['ext'=>'html|htm']);

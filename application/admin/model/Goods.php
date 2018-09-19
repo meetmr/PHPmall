@@ -99,8 +99,7 @@ class Goods extends BaseModel
     public static function getGoods($count){
        $goods =  self::where(['recommend_id'=>0])->where(['on_sale'=>1])->where(['is_delete'=>1])->field('id,goods_name,og_thumb,shop_price')->limit($count)->select();
         foreach ($goods as $item) {
-            $ims = getGoodsImg($item['id']);
-            $item['images'] = $ims;
+            $item['images'] = getGoodsImg($item['id']);
             // 查询商品相册
         }
         return $goods;
@@ -112,8 +111,7 @@ class Goods extends BaseModel
         if($c_id == 0){
             $goods = self::where(['on_sale'=>1])->where(['is_delete'=>1])->field('id,goods_name,og_thumb,shop_price')->select();
             foreach ($goods as $item) {
-                $ims = getGoodsImg($item['id']);
-                $item['images'] = $ims;
+                $item['images'] = getGoodsImg($item['id']);
                 // 查询商品相册
             }
             return $goods;
@@ -125,9 +123,8 @@ class Goods extends BaseModel
             $ids[] = $c_id;
             $goods = self::where(['on_sale'=>1])->where(['is_delete'=>1])->where('category_id','in',$ids)->field('id,goods_name,og_thumb,shop_price')->select();
             foreach ($goods as $item) {
-                $ims = getGoodsImg($item['id']);
-                $item['images'] = $ims;
                 // 查询商品相册
+                $item['images'] = getGoodsImg($item['id']);
             }
             return $goods;
         }
@@ -135,8 +132,7 @@ class Goods extends BaseModel
     public static function getCategoryColumnGoods($c_id){
         $goods = self::where(['on_sale'=>1])->where(['is_delete'=>1])->where(['recommend_id'=>$c_id])->field('id,goods_name,og_thumb,shop_price,markte_price')->select();
         foreach ($goods as $item) {
-            $ims = getGoodsImg($item['id']);
-            $item['images'] = $ims;
+            $item['images'] =getGoodsImg($item['id']);
             // 查询商品相册
         }
         return $goods;

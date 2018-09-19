@@ -3,10 +3,14 @@
     <div class="top-nav w clearfix">
         <a alt="安踏官方商城" href="/" class="logo"><img src="/static/index/picture/logo_1.jpg" /></a>
         <p class="logo-box" id="login">
-            <a href="/member/order_member/index">欢迎您，13541817746</a>|
-            <a href="/logout">退出</a>
+            {if $Think.session.user}
+            <a href="/member/order_member/index">欢迎您，{$Think.session.user.username}</a>|
+            <a href="{:url('user/Login/logout')}">退出</a>
+
+            {else}
             <a href="{:url('user/Login/login')}">登录</a>|
             <a href="{:url('user/Login/register')}">注册</a>
+            {/if}
         </p>
         <ul class="quick-menu clearfix">
             <li class="first-item">

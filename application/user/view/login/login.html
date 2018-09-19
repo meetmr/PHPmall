@@ -22,19 +22,17 @@
             <form autocomplete="off">
                 <div class="default">
                     <p>请输入用户名或手机号码</p>
-                    <input id="uname" name="uname" data-form="uname" type="text" />
-                    <label for="uname">用户名/手机</label>
+                    <input id="uname" name="uname" data-form="uname" type="text" placeholder="用户名"/>
                 </div>
                 <div class="default">
                     <p>请输入账号密码</p>
-                    <input id="upwd" name="upwd" data-form="upwd" type="password"/>
-                    <label for="upwd">密码</label>
+                    <input id="upwd" name="upwd" data-form="upwd" type="password" placeholder="密码"/>
                 </div>
                 <div class="submit">
                         <span class="notice">
                             <a href="#">忘记密码</a>
                         </span>
-                    <button class="s_hover" data-form="submit">登录</button>
+                    <button class="s_hover" type="button" onclick="login()">登录</button>
                 </div>
             </form>
             <div class="other_login">
@@ -58,12 +56,50 @@
                     </ul>
                 </div>
             </div>
-
         </div>
     </div>
     <div id="footer">
     </div>
 </div>
+<script>
+    function login() {
+        // 用户名
+        var uname = $("#uname").val();
+        var upwd = $("#upwd").val();
+        var uPattern = /^[a-zA-Z0-9_-]{5,16}$/;
+        var pass = /^\w{6,16}$/;
+        if(!uPattern.test(uname)){
+            layer.msg('用户名不正确', {
+                icon: 5,
+                skin: 'layer-ext-moon'
+            });
+            return;
+        }
+        if(upwd=='' || !pass.test(upwd)){
+            layer.msg('请输入6-16位密码', {
+                icon: 5,
+                skin: 'layer-ext-moon'
+            });
+            return;
+        }
 
+        var url = "{:url('user/Login/HandleLogin')}";
+        var postData ={"uname":uname,"upwd":upwd};
+        $.post(url,postData,function (result) {
+            if(result.error === 1 ){
+                layer.msg(result.msg);
+                location.href = "/";
+            }else {
+                layer.msg(result.msg, {
+                    icon: 5,
+                    skin: 'layer-ext-moon'
+                });
+
+            }
+        },"json")
+
+    }
+
+</script>
 </body>
 </html>

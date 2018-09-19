@@ -32,8 +32,7 @@ class Category extends BaseModel
     public static function getCategoryErJi(){
         $goods =  self::where('pid','=',0)->field('id,cate_name')->select();
         foreach ($goods as $good){
-            $goodserji =  self::where('pid','=',$good['id'])->field('id,cate_name')->select();
-            $good['erji'] = $goodserji;
+            $good['erji'] = self::where('pid','=',$good['id'])->field('id,cate_name')->select();
         }
         return $goods;
     }
