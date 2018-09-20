@@ -4,7 +4,7 @@
         <a alt="安踏官方商城" href="/" class="logo"><img src="/static/index/picture/logo_1.jpg" /></a>
         <p class="logo-box" id="login">
             {if $Think.session.user}
-            <a href="/member/order_member/index">欢迎您，{$Think.session.user.username}</a>|
+            <a href="{:url('user/User/member')}">欢迎您，{$Think.session.user.username}</a>|
             <a href="{:url('user/Login/logout')}">退出</a>
 
             {else}
@@ -16,7 +16,7 @@
             <li class="first-item">
                 <a href="/kuaidi">订单查询</a>|</li>
             <li><i class="icon icon-cart"></i>
-                <a class="" href="/cart">购物车<span class="cart-num">(4)</span>件</a></li>
+                <a class="" href="{:url('user/cart/info')}">购物车<span class="cart-num">({$cart_count})</span>件</a></li>
         </ul>
     </div>
     <div class="nav w-full">

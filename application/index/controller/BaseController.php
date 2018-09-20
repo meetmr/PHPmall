@@ -14,6 +14,7 @@ use app\admin\model\Conf;
 use app\admin\model\Recommend;
 use app\admin\model\Category;
 use app\admin\model\Article;
+use app\admin\model\Cart as CartModel;
 class BaseController extends Controller
 {
     public function initialize()
@@ -23,6 +24,7 @@ class BaseController extends Controller
         $this->getCategory();
         $this->getFooterArts();
         $this->key();
+        $this->getCartCount();
     }
 
     // 获取配置信息
@@ -65,5 +67,26 @@ class BaseController extends Controller
         $this->assign([
             'confKey'   =>  $confKey
         ]);
+    }
+    // 判断是否登陆
+    public function isLogin(){
+        if(!session('user')){
+            return $this->redirect('user/login/login');
+        }
+    }
+
+    //获取购物车数量
+    public function getCartCount(){
+        if(!session('user')){
+            $this->assign([
+                'cart_count'    =>0
+            ]);
+        }
+        $user_id = session('user.id');
+        $count =  CartModel::where(['u_id'=>$user_id])->select()->count();
+        $this->assign([
+            'cart_count'    =>$count
+        ]);
+
     }
 }

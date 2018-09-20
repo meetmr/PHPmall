@@ -7,130 +7,21 @@
 	<title>订单管理-艺创陶瓷</title>
 	<meta name="keywords" content=""/>
 	<meta name="description" content=""/>
-	<meta name="viewport" content="width=device-width; initial-scale=1.0" />	
-	<link rel="stylesheet" href="/static/user/css/base_2.css" />
-	<link rel="stylesheet" href="../static/css/member.css" />
+	<meta name="viewport" content="width=device-width; initial-scale=1.0" />
+	<link rel="stylesheet" href="/static/index/css/base_2.css" />
+	<link rel="stylesheet" href="/static/index/css/member.css" />
 	<script src="/static/user/js/jquery-2.1.4.min_2.js"></script>
-	<script src="../static/js/jquery-migrate-1.2.1.min_2.js"></script>
-	<link type="image/x-icon" href="/public/uploads/cache/images/osc1/store/index-16x16.jpg" rel="icon">
-	<link type="image/x-icon" href="/public/uploads/cache/images/osc1/store/index-16x16.jpg" rel="bookmark">
-	
+	<script src="/static/index/js/jquery-migrate-1.2.1.min_2.js"></script>
+
 </head>
-<body>	
-
-
+<body>
 	<div class="com-top-nav w">
 	<div class="wcp-wrap">
 	</div>
 </div>
 
-<div class="header w-full clearfix">
-		<div class="top-nav w"></div>
-		<div class="top-nav w clearfix">
-			<a alt="安踏官方商城" href="/" class="logo"><img src="../static/picture/logo_2.jpg" /></a>
-			<p class="logo-box" id="login">				
-									<a href="/member/order_member/index">欢迎您，13541817746</a>|
-					<a href="/logout">退出</a>
-								
-			</p>						
-			<ul class="quick-menu clearfix">
-				<li class="first-item">
-				<a href="/kuaidi">订单查询</a>|</li>
-				
-				<li class="mobile-btn">
-					<i class="icon icon-phone"></i>
-					<a>手机商城</a>|
-					<div class="mobile-shop hide">
-						<img src="../static/picture/qrcode-125x125_2.jpg">
-					</div>
-				</li>
-		
-				<li><i class="icon icon-cart"></i>
-				<a class="" href="/cart">购物车<span class="cart-num">(4)</span>件</a></li>
-			</ul>
-		</div>
-		<div class="nav w-full">
-			<div class="main-nav w clearfix">
-				<!-- 左侧导航条 -->
-				<div class="all-styles">
-					<a class="all-styles-title" title="查找所有商品分类" href="/categorys">所有产品分类</a>
-					<ul class="all-styles-tab hide">						
-													<li>
-								<h3><a title="茶具" href="/category/1/p/1">茶具</a></h3>
-															</li>
-													<li>
-								<h3><a title="茶杯" href="/category/2/p/1">茶杯</a></h3>
-															</li>
-													<li>
-								<h3><a title="茶壶" href="/category/3/p/1">茶壶</a></h3>
-															</li>
-													<li>
-								<h3><a title="茶宠" href="/category/4/p/1">茶宠</a></h3>
-															</li>
-													<li>
-								<h3><a title="茶盘" href="/category/5/p/1">茶盘</a></h3>
-															</li>
-													<li>
-								<h3><a title="茶叶罐" href="/category/6/p/1">茶叶罐</a></h3>
-															</li>
-												
-					</ul>
-				</div>
-				<!-- 左侧导航条 END -->
-				<!-- 横向导航条 -->
-				<ul class="line-nav clearfix">
-					
-										
-					<li class="item">
-						<a href="/">首页</a>
-					</li>
-					
-										
-					<li class="item">
-						<a href="/sale">特价</a>
-					</li>
-					
-										
-					<li class="item">
-						<a href="/points">积分兑换</a>
-					</li>
-					
-										
-					<li class="item">
-						<a href="/pintuan">拼团</a>
-					</li>
-					
-										
-				</ul>
-			<!-- 横向导航条 END -->
-			<div class="nav-search">				
-               		 <input type="text"  name="key" class="nav-search-input" id="search_box" value="" >
-                	 <a id="search" url="/search" class="nav-search-btn"></a>            
-				<!--搜索热词-->
-				<div class="suggestion">
-					<div class="hotwords">
-					<ul class="hotwords-list">
-						
-														<li><a href="/search?key=鞋">鞋</a></li>
-														<li><a href="/search?key=柴烧">柴烧</a></li>
-														<li><a href="/search?key=茶具">茶具</a></li>
-														<li><a href="/search?key=百搭T恤">百搭T恤</a></li>
-														<li><a href="/search?key=鞋城共舞">鞋城共舞</a></li>
-														<li><a href="/search?key=爱尚运动">爱尚运动</a></li>
-														<li><a href="/search?key=10月大放价">10月大放价</a></li>
-												
-					</ul>
-					</div>
-				</div>
-			</div>
-			
-			</div>		
-		</div>
-		
-	</div>
-
-
-
+	<!--头部-->
+	{include file='index@public/header'}
 
 <div id="member_content">
 	<div class="w clearfix">
@@ -142,23 +33,9 @@
 			<li>
 				<a href="http://www.91ycc.com/member/order_member/index">订单管理</a>
 			</li>
-		   
-			<li>
-				<a href="http://www.91ycc.com/member/wishlist/index">我的收藏</a>
-			</li>
-		   
-			<li>
-				<a href="http://www.91ycc.com/member/pintuan/index">我的拼团</a>
-			</li>
-		   
 			<li>
 				<a href="http://www.91ycc.com/member/comment/index">我的评价</a>
 			</li>
-		   
-			<li>
-				<a href="http://www.91ycc.com/member/points/index">我的积分</a>
-			</li>
-		   
 			<li>
 				<a href="http://www.91ycc.com/member/predeposit/index">我的余额</a>
 			</li>
@@ -186,7 +63,7 @@
 			</li>
 				</ul>
 	</div>
-<script src="../static/js/jquery.lavalamp.min.js"></script>
+<script src="/static/index/js/jquery.lavalamp.min.js"></script>
 <script>
 $(function(){
 	//边栏菜单的伸缩效果
@@ -219,8 +96,7 @@ $(function(){
 		var a = $('#top-tag').children('.lavalamp-item').eq(parseFloat(v)-1);		
 		$('#top-tag').data('lavalampActive',a).lavalamp('update');	
 	}
-});	
-
+});
 </script>
 		<div id="right_content">
 			<div id="member-nav" class="clearfix">
@@ -280,116 +156,11 @@ $(function(){
 
 
 
-	<div class="footer">
-		<div class="serverbox w clearfix">
-			<ul class="server-list clearfix">
-				<li class="item-first">
-					<h4>平台公告</h4>
-											<a href="/article/12">关于中秋放假公告 </a>
-											<a href="/article/11">关于平台晒单公告 </a>
-											<a href="/article/10">防台风“鲇鱼”--配送延迟公告 </a>
-											<a href="/article/1">关于双11配送延迟 </a>
-									</li>
-				<li>
-					<h4>新手帮助</h4>
-											<a href="/article/8">退换货说明</a>
-											<a href="/article/7">售后政策</a>
-											<a href="/article/6">在线支付</a>
-											<a href="/article/5">预存款使用说明</a>
-											<a href="/article/4">积分说明</a>
-											<a href="/article/3">购物流程</a>
-									</li>
-				<li>
-					<h4>售后服务</h4>
-											<a href="/article/19">如何办理退换货</a>
-											<a href="/article/18">退款详细说明</a>
-											<a href="/article/17">退换货政策说明</a>
-									</li>
-				<li>
-					<h4>关于我们</h4>
-											<a href="/article/23">人才招聘</a>
-											<a href="/article/22">联系我们</a>
-											<a href="/article/20">关于我们</a>
-									</li>
-			</ul>				
-			<div class="custom-service">
-				<h4>在线咨询</h4>
-				<span class="server-tel">400-881-8283</span>
-				<a href="http://wpa.qq.com/msgrd?v=3&amp;uin=1093157171&amp;site=qq&amp;menu=yes" target="_blank" class="server-btn"><i class="icon icon-zxkf"></i><span>在线客服</span></a>
-				<h4>微信公众号</h4>
-				<a class="weixin-code" href="javascript:;">
-					<img src="../static/picture/qrcode-90x90_2.jpg" />
-				</a>
-			</div>	
-		</div>
-		
-		<div class="company-cr w-full">
-			<div class="company-info w clearfix">
-					<span class="copyright">COPYRIGHT 2015-2018</span>
-
-					<span class="company-name">艺创陶瓷</span>
-					
-					<span class="company-icp">闽ICP备15012617号</span>
-
-				<div><a href="#" target="_blank">网站地图</a><a href="#" target="_blank">标签</a><a href="#" target="_blank">友情链接</a></div>
-			</div>
-			
-		</div>
-	</div>
+	{include file='index@public/footer'}
 
 
 </body>
-<link href="../static/css/default_2.css" rel="stylesheet" type="text/css" />
-<script src="../static/js/artdialog_2.js"></script>
-<script src="../static/js/iframetools_2.js"></script>
 
 
-
-<script src="../static/js/common_2.js"></script>
-
-<script>	
-$(function(){
-    
-    $('.re_pay').click(function(){
-		
-		var order_id=$(this).attr('order_id');
-		
-		var url="/Payment/Payment/choice_payment_type"+"/order_id/"+order_id;
-		
-		art.dialog.open(url, {
-						title:'去付款',
-						id:'apply',						
-						lock: true
-		});
-	});
-    
-    $('.cancel_order').click(function(){
-    	
-    	var f=confirm('确认要取消订单吗？');
-    	
-		if(f==false){
-			return false;
-		}
-    	
-    	var url=$(this).attr('url');
-    	
-    	art.dialog({id:'loading',lock: true,title:'加载中'});	
-    	
-    	$.post(
-    		url,
-    		function(d){
-    			art.dialog.list['loading'].close();
-    			if(d.error){
-    				alert(d.error);
-    			}else{
-    				location="/member/OrderMember/index";
-    			}
-    		}
-    	);
-    	
-    });
-    
-});
-</script>
 
 </html>

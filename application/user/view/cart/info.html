@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<title>购物车-PHPMall</title>
+	<meta name="keywords" content="购物车-PHPMall"/>
+	<meta name="description" content="购物车-PHPMall"/>
+	<link rel="stylesheet" href="/static/user/css/base.css" />
+	<link rel="stylesheet" href="/static/user/css/cart.css" />
+	<script src="/static/user/js/jquery-2.1.4.min.js"></script>
+	<script src="/static/user/js/jquery-migrate-1.2.1.min.js"></script>
+	<script src="/static/layer/layer.js"></script>
+</head>
+<body>
+	<div class="com-top-nav w">
+	<div class="wcp-wrap">
+	</div>
+</div>
+
+
+
+	<!--头部-->
+	{include file='index@public/header'}
+	<div id="cart">
+		{if $is}
+		<div class="w_cart" id="no_empty">
+			<div class="cart-hd group">
+				<h2>我的购物车</h2>
+			</div>
+			<div class="w_cart_inner">
+				<table class="w_cart_table">
+					<thead>
+					<tr>
+
+						<td>商品编号</td>
+						<td>商品图片</td>
+						<td style="text-align: left">商品信息</td>
+						<td>单价</td>
+						<td>商品数量</td>
+						<td>删除商品</td>
+					</tr>
+					</thead>
+					{volist name="userCart" id="user_Cart"}
+					<tr class="item">
+						<td>{$user_Cart.goods.goods_code}</td>
+						<td class="p-img">
+							<a class="in_b" href="{:url('index/Goods/index',array('id'=>$user_Cart.goods.id))}">
+								<img class="vm" alt="{$user_Cart.goods.goods_name}" width="40" src="/static/uploads/{$user_Cart.goods.og_thumb}">
+							</a>
+						</td>
+						<td class="p-name">
+							<h2> <a title="{$user_Cart.goods.goods_name}" href="{:url('index/Goods/index',array('id'=>$user_Cart.goods.id))}">{$user_Cart.goods.goods_name}</a> </h2>
+
+						</td>
+						<td class="p-price">
+							<span class="price">&yen; {$user_Cart.goods.shop_price}</span>
+						</td>
+						<td class="p-quantity">
+							<div class="quantity-form" id="quantitym26xlgwkwq">
+								<a onclick='changeQty(0,"{$user_Cart.goods.id}");' class="decrement">-</a>
+								<input onkeyup='change_quantity("m26xlgwkwq",this);' type="text" value="{$user_Cart.number}" disabled id="quantity{$user_Cart.goods.id}" class="quantity-text">
+								<a onclick='changeQty(1,"{$user_Cart.goods.id}");'  class="increment">+</a>
+							</div>
+						</td>
+						<td class="p-remove"><a style="cursor: pointer;" onclick="remove_goods('m26xlgwkwq');" class="cart-remove">删除</a></td>
+					</tr>
+					{/volist}
+					<tr class="cart_toolbar">
+						<td colspan="5">
+							<div style="width: 200px;" class="control">
+
+								<span class="delete_cart"> <a style="cursor: pointer;" onclick="truncate();">清空购物车</a></span>
+							</div>
+						</td>
+
+						<td class="total_box" colspan="6">
+							<p>
+								<label for="应付金额">总计</label> <span id="Jfinal" class="c_red total_price">¥<i>{$sum_price}</i></span>
+							</p>
+						</td>
+					</tr>
+
+					<tr class="cart_total">
+						<td colspan="8"><a class="continue" href="/">继续购物</a>
+							<a href="/checkout/goods/all" class="account">结算</a>
+						</td>
+					</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+		{else}
+		<div class="w_cart w" id="empty">
+			<div class="cart-hd group">
+				<h2>我的购物车</h2>
+			</div>
+			<div class="cart-inner cart-empty">
+				<div class="message">
+					<p>
+						购物车内暂时没有商品，您可以<a href="/">马上去挑选商品</a>
+					</p>
+				</div>
+			</div>
+		</div>
+		{/if}
+</div>
+	{include file='index@public/footer'}
+	<script>
+        function changeQty(s,goods_id) {
+            var quantity = $("#quantity"+goods_id).val();
+            if(quantity<1){
+                $("#quantity").val(1);
+            }
+            if(isNaN(quantity)){
+                $("#quantity").val(1);
+            }
+            if(s===0){
+                $.ajax({
+                    url:"{:url('user/Cart/cartDelete')}",
+                    type:"POST",
+                    dataType:"json",
+                    data:{
+                        goods_id:goods_id
+                    },
+                    success:function (res) {
+                        if(res.code === -1){
+                            layer.alert(res.msg)
+                            $("#quantity").val(res);
+                        }else {
+                            window.location.reload();  //刷新父级页面
+                        }
+                    }
+                });
+            }else {
+                $.ajax({
+                    url:"{:url('user/Cart/cartAdd')}",
+                    type:"POST",
+                    dataType:"json",
+                    data:{
+                        goods_id:goods_id
+                    },
+                    success:function (res) {
+                        if(res.code === -1){
+                            layer.alert(res.msg)
+                            $("#quantity"+goods_id).val(res.stock);
+                        }else {
+                            window.location.reload();  //刷新父级页面
+                        }
+                    }
+                });
+            }
+
+        }
+
+        function truncate() {
+            $.ajax({
+                url:"{:url('user/Cart/truncate')}",
+                type:"POST",
+                dataType:"json",
+                success:function (res) {
+                    if(res.code === -1){
+                        layer.alert(res.msg)
+                        $("#quantity").val(res);
+                    }else {
+                        window.location.reload();  //刷新父级页面
+                    }
+                }
+            });
+
+        }
+	</script>
+
+</body>
+</html>
