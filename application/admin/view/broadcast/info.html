@@ -1,0 +1,153 @@
+﻿{include file="public/header" /}
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">图片管理</a>
+        <a>
+          <cite>轮播图管理</cite>
+        </a>
+      </span>
+  <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+    <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+
+<div class="x-body" >
+  <xblock>
+    <button class="layui-btn" onclick="x_admin_show('添加品牌','{:url(\'admin/Broadcast/add\')}')"><i class="layui-icon"></i>添加</button>
+  </xblock>
+  <div class="container-wrap">
+    <div class="box-1">
+      <table class="layui-table">
+        <thead>
+        <tr>
+        <th style="text-align: center" width="80">名称</th>
+        <th style="text-align: center" width="40">图片</th>
+        <th style="text-align: center" width="20">连接商品</th>
+        <th style="text-align: center" width="50">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      {volist name="broadcasts" id="vo_broadcasts"}
+      <tr  style="text-align: center">
+        <td>{$vo_broadcasts.name}</td>
+        <td>
+          <img  src="/static/uploads/{$vo_broadcasts.img_path}" width="100">
+        </td>
+        <td>
+          {$vo_broadcasts.good_id|getGoodsName}
+        </td>
+        <td class="td-manage" width="10">
+          <div class="layui-input-inline" >
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"  onclick="x_admin_show('修改轮播图','{:url(\'admin/Broadcast/edit\',[\'id\'=>$vo_broadcasts.id])}')"><i class="layui-icon layui-icon-edit"></i>编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" onclick="delete_brand(this,'{$vo_broadcasts.id}','{$vo_broadcasts.img_path}')"><i class="layui-icon layui-icon-delete"></i>删除</a>
+          </div>
+        </td>
+      </tr>
+      {/volist}
+      </tbody>
+    </table>
+    </div>
+</div>
+  <div class="page">
+    </div>
+  <script>
+    //排序
+    $(".listorder input").blur(function () {
+        var listorder =  $(this).val();
+        var id = $(this).attr('attr-id');
+        var url = "{:url('/admin/brand/updateSort')}";
+        var postData ={"id":id,"listorder":listorder,'table':"brand","value":"sort"};
+        $.post(url,postData,function (result) {
+            if(result == 1 ){
+                layer.alert("更新成功", {icon: 6},function () {
+                    window.location.reload();  //刷新父级页面
+                });
+            }else {
+                layer.alert("更新失败", {icon: 5});
+            }
+        },"json")
+    });
+
+      layui.use('laydate', function(){
+          var laydate = layui.laydate;
+          //执行一个laydate实例
+          laydate.render({
+              elem: '#start' //指定元素
+          });
+
+          //执行一个laydate实例
+          laydate.render({
+              elem: '#end' //指定元素
+          });
+      });
+      //更改状态
+      function update_status(obj,id,status) {
+          layer.confirm('确定要更改状态吗？',function(index){
+              $.ajax({
+                  url:"{:url('admin/brand/updateStatus')}",
+                  type:"POST",
+                  dataType:"json",
+                  data:{
+                      id:id,  //id
+                      status:status,   //状态
+                      table:"brand",
+                      value:"status"
+                  },
+                  success:function (res) {
+                    if (res === 1){
+                        layer.alert("更新成功", {icon: 6},function () {
+                            window.location.reload();  //刷新父级页面
+                        });
+                    }else {
+                        layer.alert("更新失败", {icon: 5});
+                    }
+                  }
+              });
+          });
+
+      }
+      /*用户-删除*/
+      function delete_brand(obj,id,img_path){
+          layer.confirm('确认要删除吗？',function(index){
+              $.ajax({
+                  url:"{:url('admin/Broadcast/delete')}",
+                  type:"POST",
+                  dataType:"json",
+                  data:{
+                      id:id,  //id
+                      img_path:img_path
+                  },
+                  success:function (res) {
+                      if (res === 1){
+                          $(obj).parents("tr").remove();
+                          layer.msg('已删除!',{icon:1,time:1000});
+                      }else {
+                          layer.alert("更新失败", {icon: 5});
+                      }
+                  }
+              });
+          });
+      }
+
+      function delAll (argument) {
+          var data = tableCheck.getData();
+          layer.confirm('确认要删除吗？',function(index){
+              //捉到所有被选中的，发异步进行删除
+              $.ajax({
+                  url:"/index/index/delall",
+                  type:"POST",
+                  dataType:"json",
+                  data:{
+                      table:"hy_drawing_detial",  //表名
+                      data:data   //数据
+                  },
+                  success:function (res) {
+                      layer.msg(res.message, {icon: 1});
+                      $(".layui-form-checked").not('.header').parents('tr').remove();
+                  },
+              });
+          });
+      }
+  </script>
+</body>
+</html>

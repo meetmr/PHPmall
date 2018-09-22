@@ -1,0 +1,106 @@
+{include file="public/header" /}
+<body>
+<div class="x-body ">
+    <form  class="layui-form">
+        <div class="layui-form-item">
+            <label for="name" class="layui-form-label">名称</label>
+            <div class="layui-input-inline">
+                <input type="text" id="name" name="name" value="{$broadcast.name}" autocomplete="off" class="layui-input" >
+                <input type="hidden" id="id" name="id" value="{$broadcast.id}" autocomplete="off" class="layui-input" >
+                <p id="pLog" style="color:red"></p>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">连接商品</label>
+            <div class="layui-input-block">
+                <select name="good_id" lay-verify="required">
+                    <option value=""></option>
+                    {volist name="goods" id="vo_goods"}
+                    <option value="{$vo_goods.id}"
+                        {if $vo_goods.id == $broadcast.good_id}
+                            selected
+                            {/if}
+                    >{$vo_goods.goods_name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" id="upload1">上传图片</button>
+                <input type="hidden" id="img_url"  name="img_path" value="{$broadcast.img_path}"/>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" src="/static/uploads/{$broadcast.img_path}" width="500px" height="200px" id="demo1"/>
+                    <p id="demoText"></p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn" lay-submit lay-filter="addId">
+                修改
+            </button>
+        </div>
+    </form>
+</div>
+    <script type="text/javascript">
+        layui.use('upload', function(){
+            var upload = layui.upload
+                , $ = layui.jquery;
+            var uploadInst = upload.render({
+                elem: '#upload1' //绑定元素
+                ,url: "{:url('admin/brand/upload')}"
+                ,before: function(obj){
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result){
+                        $('#demo1').attr('src', result); //图片链接（base64）
+                    });
+                }
+                ,done: function(res){
+                    //如果上传失败
+                    if(res.code === 0){
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                    document.getElementById("img_url").value = res.url;
+
+                }
+                ,error: function(){
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                    });
+                }
+            });
+        });
+</script>
+<script>
+    layui.use(['form'], function(){
+        $ = layui.jquery;
+        var form = layui.form,layer = layui.layer;
+        //监听提交
+        form.on('submit(addId)', function(data){
+            //console.log(data);
+            $.post("{:url('admin/Broadcast/edit')}",data.field,function(info){
+                if (info.errorCode===1) {
+                    layer.alert("修改成功", {icon: 6},function () {
+                        window.parent.location.reload();  //刷新父级页面
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前弹出层
+                        parent.layer.close(index);
+                    });
+                }else{
+                    layer.alert(info.msg, {icon: 5});
+                }
+            },'json');
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

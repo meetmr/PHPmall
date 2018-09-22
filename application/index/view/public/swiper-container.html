@@ -1,16 +1,12 @@
 <div class="swiper-container w-full">
     <div class="swiper-wrapper">
+        {volist name="roadcast" id="roadcast"}
         <div class="swiper-slide" style="height: 400px;">
-            <a href="" title="中秋" target="_blank">
-                <img src="/static/index/picture/timg.jpg" height="100%"/>
+            <a href="{:url('index/Goods/index',array('id'=>$roadcast.good_id))}" title="{$roadcast.name}" target="_blank">
+                <img src="/static/uploads/{$roadcast.img_path}" height="100%"/>
             </a>
         </div>
-        <div class="swiper-slide"  style="height: 400px;">
-            <a href="" title="优惠" target="_blank">
-                <img src="/static/index/picture/timg (2).jpg" height="100%"/>
-            </a>
-        </div>
-
+        {/volist}
     </div>
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>

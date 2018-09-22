@@ -1,0 +1,174 @@
+﻿
+{include file='public/top'}
+
+<!--头部-->
+{include file='index@public/header'}
+
+<div id="member_content">
+	<div class="w clearfix">
+		{include file='public/mem_menu'}
+
+		<script src="static/js/jquery.lavalamp.min.js"></script>
+<script>
+$(function(){
+	//边栏菜单的伸缩效果
+	$("#mem_menu h2").click(function(){
+		var sidebar_dd = $(this).next("ul");
+		if(!sidebar_dd.is(":animated")){
+			$(this).toggleClass("open");
+			sidebar_dd.slideToggle("slow");	
+		}	
+	});	
+	
+	//边栏菜单选中效果	
+	var crumbs_name='收货地址';
+	$(".sline li a").each(function(){			
+		var href_name=$.trim($(this).text());	
+		if(href_name==crumbs_name){				
+			 $(this).addClass('current');		 	 
+		}
+	});	 	
+	
+	//面包屑导航下划线滑动效果
+	if($('#top-tag')){
+		
+		$('#top-tag').lavalamp({
+			easing: 'easeOutBack'
+		});	
+		
+		var v =$('#top-tag li.on').index();
+		
+		var a = $('#top-tag').children('.lavalamp-item').eq(parseFloat(v)-1);		
+		$('#top-tag').data('lavalampActive',a).lavalamp('update');	
+	}
+});	
+
+</script>
+		<div id="right_content">
+			<div id="member-nav" class="clearfix">
+				<ul id="top-tag" class="order-list">
+					<li class="fl">						
+						<a href="{:url('user/user/Address')}">收货地址</a>
+					</li>		
+					<li class="fl on">
+						<a  href="{:url('user/user/addAddress')}"  style="color:red;">新增地址</a>
+
+					</li>			
+				</ul>
+			</div>
+			<ul class="form">
+				<li>
+					<span>收货人</span>
+					<input name="name" class="text" placeholder="收货人姓名" id="name"  value="" type="text">
+				</li>
+				<li><span>手机号码</span>
+					<input name="telephone" class="text" placeholder="手机号码" value="" id="province" type="text">
+				</li>
+				<li>
+					<span>收货地址</span>
+					<input name="address" class="text" placeholder="收货地址" value="" type="text" id="detailed">
+				</li>
+				<li>
+					<span>区域</span>
+					<p id="area">
+				        <select name="city" id="city" class="second-level" >
+							<option value="">请选择</option>
+							{volist name='list_city' id='vo'}
+							<option value="{$vo.region_id}">{$vo.region_name}</option>
+							{/volist}
+						</select>
+						<select  id="country"  name="country" class="form-control level-Three">
+							<option value="">请选择</option>
+						</select>
+						<select   id="detail" name="detail" class="form-control Three">
+							<option value="">请选择</option>
+						</select>
+					</p>
+				</li>
+				<li><span> </span> <button type="button" onclick="addAddress()" style="margin-left:100px;" id="send">提交</button></li>
+			</ul>
+		</div>
+	</div>
+</div>
+<script>
+    $(".second-level").change(function () {
+        var region_id = $(this).val();
+        var data = {"region_id":region_id};
+        var url = "{:url('user/User/getlevelcity')}";
+        $.post(url,data,function (reuslt) {
+            var ax =eval(reuslt);
+            var str="<option value=\"\">请选择</option>";
+            for(var i=0;i<ax.length;i++){
+                str+= "<option value="+ax[i]['region_id']+">"+ax[i]['region_name']+"</option>";
+            }
+            $(".level-Three").html(str);
+            $(".Three").html('<option value="">请选择</option>');
+        },'JSON')
+    })
+
+    $(".level-Three ").change(function () {
+        var region_id = $(this).val();
+        var data = {"region_id":region_id};
+        var url = "{:url('user/User/getlevelcity')}";
+        $.post(url,data,function (reuslt) {
+            var ax =eval(reuslt);
+            var str="<option value=\"\">请选择</option>";
+            for(var i=0;i<ax.length;i++){
+                str+= "<option value="+ax[i]['region_id']+">"+ax[i]['region_name']+"</option>";
+            }
+            $(".Three").html(str);
+        },'JSON')
+    });
+    function addAddress() {
+        var name = $("#name").val();
+        var province = $("#province").val();
+        var detailed = $("#detailed").val();
+        var city = $("#city").val();
+        var country = $("#country").val();
+        var detail = $("#detail").val();
+        if(name === ''){
+            layer.msg('请输入收货人姓名');
+            return;
+		}
+        if(province === ''){
+            layer.msg('请输入电话号码');
+            return;
+        } if(detailed === ''){
+            layer.msg('请输入详细地址');
+            return;
+        } if(city === ''){
+            layer.msg('请选择省');
+            return;
+        } if(country === ''){
+            layer.msg('请选择市');
+            return;
+        } if(detail === ''){
+            layer.msg('请选择区');
+            return;
+        }
+        $.ajax({
+            url:"{:url('user/user/cheAddress')}",
+            type:"POST",
+            dataType:"json",
+            data:{
+                name:name,
+                province:province,
+                detailed:detailed,
+                city:city,
+                country:country,
+                detail:detail,
+
+            },
+            success:function (res) {
+                if(res.code === 1){
+                	layer.alert('添加成功',function () {
+                        window.location.reload();  //刷新父级页面
+                    });
+                }
+            }
+        });
+
+    }
+</script>
+{include file='index@public/footer'}
+</html>

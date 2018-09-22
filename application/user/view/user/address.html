@@ -1,0 +1,112 @@
+﻿
+{include file='public/top'}
+
+<!--头部-->
+{include file='index@public/header'}
+
+<div id="member_content">
+	<div class="w clearfix">
+		{include file='public/mem_menu'}
+<script src="static/js/jquery.lavalamp.min.js"></script>
+<script>
+$(function(){
+	//边栏菜单的伸缩效果
+	$("#mem_menu h2").click(function(){
+		var sidebar_dd = $(this).next("ul");
+		if(!sidebar_dd.is(":animated")){
+			$(this).toggleClass("open");
+			sidebar_dd.slideToggle("slow");	
+		}	
+	});	
+	
+	//边栏菜单选中效果	
+	var crumbs_name='收货地址';
+	$(".sline li a").each(function(){			
+		var href_name=$.trim($(this).text());	
+		if(href_name==crumbs_name){				
+			 $(this).addClass('current');		 	 
+		}
+	});	 	
+	
+	//面包屑导航下划线滑动效果
+	if($('#top-tag')){
+		
+		$('#top-tag').lavalamp({
+			easing: 'easeOutBack'
+		});	
+		
+		var v =$('#top-tag li.on').index();
+		
+		var a = $('#top-tag').children('.lavalamp-item').eq(parseFloat(v)-1);		
+		$('#top-tag').data('lavalampActive',a).lavalamp('update');	
+	}
+});	
+
+</script>
+		<div id="right_content">
+			<div id="member-nav" class="clearfix">
+				<ul id="top-tag" class="order-list">
+					<li class="fl on">						
+						<a style="color:red;">收货地址</a>
+					</li>		
+					<li class="fl">
+						<a  href="{:url('user/user/addAddress')}">新增地址</a>
+					</li>
+				</ul>
+			</div>
+			<table class="table boxorder">
+				<thead>
+					<tr>
+						<th>收货人</th> 
+						<th>地区</th>
+						<th>地址</th>
+						<th>联系电话</th>
+						<th>操作</th>	
+					</tr>
+				</thead>
+				<tbody>
+ 				{volist name="address" id="vo_address"}
+				<tr>
+					<td>{$vo_address.name}</td>
+					<td>{$vo_address.city},{$vo_address.country},{$vo_address.detail}</td>
+					<td>{$vo_address.detailed}</td>
+					<td>{$vo_address.province}</td>
+					<td>
+						<a class="delete btn"  onclick="delete_address('{$vo_address.id}')"  style="cursor:pointer" >
+							删除
+						</a>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="20" class="page"></td>
+						</tr>
+				{/volist}
+				</tbody>
+				
+			</table>
+			
+		</div>
+	</div>
+</div>
+{include file='index@public/footer'}
+<script>
+	function delete_address(id) {
+        $.ajax({
+            url:"{:url('user/user/deleteAddress')}",
+            type:"POST",
+            dataType:"json",
+            data:{
+                id:id
+            },
+            success:function (res) {
+                if(res.code === 1){
+                    layer.alert('删除成功',function () {
+                        window.location.reload();  //刷新父级页面
+                    });
+                }
+            }
+        });
+
+    }
+</script>
+</html>

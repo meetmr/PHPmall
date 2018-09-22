@@ -12,6 +12,7 @@ use app\admin\model\GoodsImg;
 use app\admin\model\Category;
 use app\admin\model\Product;
 use app\admin\model\Recommend;
+use  app\admin\model\Goods;
 
 //图片处理
 function my_scandir($dir = UEDIOOR){
@@ -71,4 +72,9 @@ function subtext($text, $length){
     }
     return $text;
 }
+// 传入商品ID 获取商品名称
 
+function getGoodsName($goods_id){
+    $goods_name = Goods::where(['id'=>$goods_id])->value('goods_name');
+    return subtext($goods_name,50);
+}

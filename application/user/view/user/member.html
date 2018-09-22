@@ -1,69 +1,13 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-	<title>订单管理-艺创陶瓷</title>
-	<meta name="keywords" content=""/>
-	<meta name="description" content=""/>
-	<meta name="viewport" content="width=device-width; initial-scale=1.0" />
-	<link rel="stylesheet" href="/static/index/css/base_2.css" />
-	<link rel="stylesheet" href="/static/index/css/member.css" />
-	<script src="/static/user/js/jquery-2.1.4.min_2.js"></script>
-	<script src="/static/index/js/jquery-migrate-1.2.1.min_2.js"></script>
-
-</head>
-<body>
-	<div class="com-top-nav w">
-	<div class="wcp-wrap">
-	</div>
-</div>
+﻿
+{include file='public/top'}
 
 	<!--头部-->
 	{include file='index@public/header'}
 
 <div id="member_content">
 	<div class="w clearfix">
-		<div id="mem_menu">
-<h1>会员中心</h1>	
-	<h2 class="title">我的订单</h2>
-			<ul class="sline">
-		   
-			<li>
-				<a href="http://www.91ycc.com/member/order_member/index">订单管理</a>
-			</li>
-			<li>
-				<a href="http://www.91ycc.com/member/comment/index">我的评价</a>
-			</li>
-			<li>
-				<a href="http://www.91ycc.com/member/predeposit/index">我的余额</a>
-			</li>
-		   
-			<li>
-				<a href="http://www.91ycc.com/member/message/index">我的消息</a>
-			</li>
-				</ul>
-		<h2 class="title">个人资料</h2>
-			<ul class="sline">
-		   
-			<li>
-				<a href="http://www.91ycc.com/member/account/password">修改密码</a>
-			</li>
-		   
-			<li>
-				<a href="http://www.91ycc.com/member/account/address">收货地址</a>
-			</li>
-				</ul>
-		<h2 class="title">客户服务</h2>
-			<ul class="sline">
-		   
-			<li>
-				<a href="http://www.91ycc.com/member/aftersales/index">售后服务</a>
-			</li>
-				</ul>
-	</div>
-<script src="/static/index/js/jquery.lavalamp.min.js"></script>
+		{include file='public/mem_menu'}
+		<script src="/static/index/js/jquery.lavalamp.min.js"></script>
 <script>
 $(function(){
 	//边栏菜单的伸缩效果
@@ -153,12 +97,7 @@ $(function(){
 		</div>
 	</div>
 </div>
-
-
-
 	{include file='index@public/footer'}
-
-
 </body>
 
 

@@ -6,7 +6,6 @@
             {if $Think.session.user}
             <a href="{:url('user/User/member')}">欢迎您，{$Think.session.user.username}</a>|
             <a href="{:url('user/Login/logout')}">退出</a>
-
             {else}
             <a href="{:url('user/Login/login')}">登录</a>|
             <a href="{:url('user/Login/register')}">注册</a>

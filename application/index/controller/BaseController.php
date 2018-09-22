@@ -15,6 +15,7 @@ use app\admin\model\Recommend;
 use app\admin\model\Category;
 use app\admin\model\Article;
 use app\admin\model\Cart as CartModel;
+use app\admin\model\Broadcast;
 class BaseController extends Controller
 {
     public function initialize()
@@ -25,6 +26,7 @@ class BaseController extends Controller
         $this->getFooterArts();
         $this->key();
         $this->getCartCount();
+        $this->getBroadcast();
     }
 
     // 获取配置信息
@@ -87,6 +89,13 @@ class BaseController extends Controller
         $this->assign([
             'cart_count'    =>$count
         ]);
+    }
 
+    // 获取轮播图
+    public function getBroadcast(){
+        $roadcast = Broadcast::order('id desc')->select();
+        $this->assign([
+            'roadcast' =>  $roadcast
+        ]);
     }
 }

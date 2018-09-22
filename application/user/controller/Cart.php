@@ -50,7 +50,7 @@ class Cart extends BaseController
             $user_id = session('user.id');
             // 入库
             //1、查询现有的商品是否已经入库
-            $cart = CartModel::where(['g_id'=>$data['goods_id']])->find();
+            $cart = CartModel::where(['g_id'=>$data['goods_id'],'u_id'=>$user_id])->find();
             // 如果购物车存在商品、则在现有的基础上将提交过来的数量修改
             if($cart){
                 $number = $cart['number'];  // 获取数据库中的数量
@@ -147,6 +147,20 @@ class Cart extends BaseController
         if(Request::isAjax()){
             $user_id = session('user.id');
             $info =  $info = CartModel::where(['u_id'=>$user_id])->delete();
+            if($info){
+                $state = [
+                    'code'  =>  1,
+                ];
+                return json($state);
+            }
+
+        }
+    }
+    // 删除单个商品
+    public function removeGoods(){
+        if(Request::isAjax()){
+            $cart_id = Request::post('cart_id');
+            $info = CartModel::where(['id'=>$cart_id])->delete();
             if($info){
                 $state = [
                     'code'  =>  1,

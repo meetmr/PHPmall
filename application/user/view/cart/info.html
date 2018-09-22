@@ -19,8 +19,6 @@
 	</div>
 </div>
 
-
-
 	<!--头部-->
 	{include file='index@public/header'}
 	<div id="cart">
@@ -52,7 +50,6 @@
 						</td>
 						<td class="p-name">
 							<h2> <a title="{$user_Cart.goods.goods_name}" href="{:url('index/Goods/index',array('id'=>$user_Cart.goods.id))}">{$user_Cart.goods.goods_name}</a> </h2>
-
 						</td>
 						<td class="p-price">
 							<span class="price">&yen; {$user_Cart.goods.shop_price}</span>
@@ -64,7 +61,7 @@
 								<a onclick='changeQty(1,"{$user_Cart.goods.id}");'  class="increment">+</a>
 							</div>
 						</td>
-						<td class="p-remove"><a style="cursor: pointer;" onclick="remove_goods('m26xlgwkwq');" class="cart-remove">删除</a></td>
+						<td class="p-remove"><a style="cursor: pointer;" onclick="remove_goods('{$user_Cart.id}');" class="cart-remove">删除</a></td>
 					</tr>
 					{/volist}
 					<tr class="cart_toolbar">
@@ -81,13 +78,11 @@
 							</p>
 						</td>
 					</tr>
-
 					<tr class="cart_total">
 						<td colspan="8"><a class="continue" href="/">继续购物</a>
 							<a href="/checkout/goods/all" class="account">结算</a>
 						</td>
 					</tr>
-
 					</tbody>
 				</table>
 			</div>
@@ -109,6 +104,25 @@
 </div>
 	{include file='index@public/footer'}
 	<script>
+		// 删除单个商品
+		function remove_goods(cart_id) {
+            $.ajax({
+                url:"{:url('user/Cart/removeGoods')}",
+                type:"POST",
+                dataType:"json",
+                data:{
+                    cart_id:cart_id
+                },
+                success:function (res) {
+                    if(res.code === -1){
+                        layer.alert(res.msg)
+                        $("#quantity").val(res);
+                    }else {
+                        window.location.reload();  //刷新父级页面
+                    }
+                }
+            });
+        }
         function changeQty(s,goods_id) {
             var quantity = $("#quantity"+goods_id).val();
             if(quantity<1){

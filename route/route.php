@@ -30,7 +30,9 @@ Route::get('login','user/Login/login',['ext'=>'html|htm']);
 // 用户管理
 
 Route::get('user/member','user/user/member',['ext'=>'html|htm']);
-
+// 显示购物车
+Route::get('user/add_address','user/user/addAddress',['ext'=>'html|htm']);
+Route::get('user/address','user/user/Address',['ext'=>'html|htm']);
 
 // 购物车
 Route::get('cart','user/cart/info',['ext'=>'html|htm']);

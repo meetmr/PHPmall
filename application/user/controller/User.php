@@ -8,7 +8,9 @@
 
 namespace app\user\controller;
 use app\index\controller\BaseController;
-
+use app\admin\model\City as CityModel;
+use think\facade\Request;
+use app\admin\model\UserAddress;
 class User extends BaseController
 {
     public function initialize(){
@@ -18,6 +20,66 @@ class User extends BaseController
 
     // 展示个人中心
     public function member(){
+        $this->assign([
+            'title'    =>  '订单管理',
+            'left'    =>    'order'
+        ]);
         return $this->fetch();
+    }
+
+    // 收获地址
+    public function address(){
+        $address = UserAddress::where(['user_id'=>session('user.id')])->select();
+        $this->assign([
+            'address'   =>  $address
+        ]);
+        $this->assign([
+            'title'    =>  '收货地址',
+            'left'    =>    'address'
+        ]);
+        return $this->fetch();
+    }
+    // 添加购物车
+    public function addAddress(){
+        $list_city = CityModel::getCitylist();
+        $this->assign('list_city',$list_city);
+        $this->assign([
+            'title'    =>  '添加-收货地址',
+            'left'    =>    'address'
+        ]);
+        return $this->fetch('add_address');
+    }
+    public function getlevelcity(){
+        $region_id = input('post.region_id');
+        $listlevelcity = CityModel::getCitylist($region_id);
+        return json($listlevelcity);
+    }
+    // 收获地址入库
+    public function cheAddress(){
+        $data = Request::post();
+        $data['city'] = CityModel::getCityName($data['city']);
+        $data['country'] = CityModel::getCityName($data['country']);
+        $data['detail'] = CityModel::getCityName($data['detail']);
+        $data['user_id'] = session('user.id');
+        $info = UserAddress::create($data);
+        if($info){
+            $state = [
+                'code' => 1,
+                'msg'=> '添加成功'
+            ];
+            return json($state);
+        }
+    }
+    //删除收获地址
+    public function deleteAddress(){
+        $id = Request::post('id');
+        $info = UserAddress::where(['id'=>$id])->delete();
+        if($info){
+            $state = [
+                'code' => 1,
+                'msg'=> '添加成功'
+            ];
+            return json($state);
+        }
     }
 }

@@ -1,0 +1,36 @@
+<div id="mem_menu">
+    <h1>会员中心</h1>
+    <h2 class="title">我的订单</h2>
+    <ul class="sline">
+        <li>
+            <a {if $left == 'order'} class="current" {/if} href="{:url('user/user/member')}">订单管理</a>
+        </li>
+        <li>
+            <a href="http://www.91ycc.com/member/comment/index">我的评价</a>
+        </li>
+        <li>
+            <a href="http://www.91ycc.com/member/predeposit/index">我的余额</a>
+        </li>
+
+        <li>
+            <a href="http://www.91ycc.com/member/message/index">我的消息</a>
+        </li>
+    </ul>
+    <h2 class="title">个人资料</h2>
+    <ul class="sline">
+
+        <li>
+            <a href="http://www.91ycc.com/member/account/password">修改密码</a>
+        </li>
+
+        <li>
+            <a {if $left == 'address'} class="current" {/if}  href="{:url('user/user/address')}">收货地址</a>
+        </li>
+    </ul>
+    <h2 class="title">客户服务</h2>
+    <ul class="sline">
+        <li>
+            <a href="http://www.91ycc.com/member/aftersales/index">售后服务</a>
+        </li>
+    </ul>
+</div>
