@@ -20,9 +20,13 @@ class User extends BaseController
 
     // 展示个人中心
     public function member(){
+        $order = $this->getOrder();
+        $count = $order->count();
         $this->assign([
             'title'    =>  '订单管理',
-            'left'    =>    'order'
+            'left'     =>    'order',
+            'order'    =>   $order,
+            'count'   =>   $count
         ]);
         return $this->fetch();
     }
@@ -39,7 +43,7 @@ class User extends BaseController
         ]);
         return $this->fetch();
     }
-    // 添加购物车
+    // 添加收货地址
     public function addAddress(){
         $list_city = CityModel::getCitylist();
         $this->assign('list_city',$list_city);

@@ -69,29 +69,89 @@ $(function(){
 					<input value="" type="submit">
 			   	</form>
 			</div>
-			
+
+			{if $count == 0}
+			<div id="empty">没有数据</div>
+			{else}
 			<div class="title">
 				<i class="i1">订单商品</i>
 				<i class="i2">收货人</i>
 				<i class="i3">金额</i>
-				<i class="i4">商品操作</i>
+				<i class="i4">关闭时间</i>
 				<i class="i5">
-						<div class="select" style="width:86px">
-							<p>							
-																全部状态
-															</p>
-							<ul>
-								<li value="1"><a href="/member/order_member/index">全部状态</a></li>
-								<li value="2"><a href="/member/order_member/status/status/3">等待付款</a></li>
-								<li value="3"><a href="/member/order_member/status/status/4">等待收货</a></li>
-								<li value="4"><a href="/member/order_member/status/status/7">已完成</a></li>
-								<li value="5"><a href="/member/order_member/status/status/5">已取消</a></li>
-							</ul>
-						</div>	
+					<div class="select" style="width:86px">
+						<p>
+							全部状态
+						</p>
+						<ul>
+							<li value="1"><a href="/member/order_member/index">全部状态</a></li>
+							<li value="2"><a href="/member/order_member/status/status/3">等待付款</a></li>
+							<li value="3"><a href="/member/order_member/status/status/4">等待收货</a></li>
+							<li value="4"><a href="/member/order_member/status/status/7">已完成</a></li>
+							<li value="5"><a href="/member/order_member/status/status/5">已取消</a></li>
+						</ul>
+					</div>
 				</i>
 				<i class="i6">交易操作</i>
 			</div>
-			<div id="empty">没有数据</div>			
+			{volist name="order" id="vo_order"}
+			<div class="boxorder">
+				<div class="number gray">
+					订单编号：<a href="/member/OrderMember/show_order/id/wdgnpyjno6" target="_blank" class="blue">{$vo_order.order_id}</a>
+					下单时间：{$vo_order.create_time}  </div>
+				<table>
+					<tbody>
+					<tr><?php $goods = json_decode($vo_order['goods_item']) ;?>
+						<?php $address = json_decode($vo_order['address']) ;?>
+						<td class="t1">
+							{volist name="goods" id="vo_goods"}
+							<?php $goodsss = $vo_goods->goods?><br>
+							<?php $id = ($goodsss->id);?>
+							<a class="img60" href="{:url('index/Goods/index',array('id'=>$id))}" target="_blank">
+								<img src="/static/uploads/<?php echo $goodsss->og_thumb?>">
+								{/volist}
+						</td>
+						<td class="t2"><?php echo $address->name;?></td>
+						<td class="t3">
+							<i class="redprice oof">
+								¥ {$vo_order.payment}
+							</i>
+						</td>
+						<td class="t4">
+							<span class="close endtime" value="<?php echo ($vo_order['close_time']);?>">	</span>
+						</td>
+						<td class="t5">
+							{switch $vo_order.status }
+							{case 1 }
+							<span class="green">待付款</span>
+							{/case}
+							{case 6}
+							<span class="green">取消订单</span>
+							{/case}
+							{default /}默认情况
+							{/switch}
+
+							<br><a href="/member/OrderMember/show_order/id/p80xgppxoq" target="_blank" class="gray">订单详情</a>
+						</td>
+						<td class="t6 start" value="{$vo_order.id}" id="start{$vo_order.id}">
+							{switch $vo_order.status }
+							{case 1 }
+							<a order_id="55" id="pay55" class="pointer re_pay buttonred">去支付</a>
+							<a url="/member/OrderMember/cancel/id/wdgnpyjno6" class="pointer cancel_order">取消订单</a>
+							{/case}
+							{case 6}
+							<a class="blue">交易关闭</a>
+							{/case}
+							{default /}默认情况
+							{/switch}
+
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			{/volist}
+			{/if}
 			<div class="page"></div>
 						
 		</div>
@@ -99,7 +159,48 @@ $(function(){
 </div>
 	{include file='index@public/footer'}
 </body>
+<script type="text/javascript">
+    $(function(){
+        setInterval(function(){
+            $(".endtime").each(function(){
+                var obj = $(this);
+                var endTime = obj.attr('value');
+          		 var timestamp = Date.parse(new Date());
+                var nMS= (endTime-(timestamp/1000)) * 1000;
+                var myD=Math.floor(nMS/(1000 * 60 * 60 * 24)); //天
+                var myH=Math.floor(nMS/(1000*60*60)) % 24; //小时
+                var myM=Math.floor(nMS/(1000*60)) % 60; //分钟
+                var myS=Math.floor(nMS/1000) % 60; //秒
+                if(myD>= 0){
+                    var str = myD+"天"+myH+"小时"+myM+"分"+myS+"秒";
+                }else{
+                    var str = "订单关闭！";
+                }
+                obj.html(str);
+            });
+        }, 1000); //每个0.1秒执行一次
+    });
 
+    $(function(){
+        setInterval(function(){
+            $(".start").each(function(){
+                var obj = $(this);
+                var order_id = obj.attr('value');
+                $.ajax({
+                    url:"{:url('user/order/testingOrder')}",
+                    type:"POST",
+                    dataType:"json",
+                    data:{
+                        order_id:order_id
+                    },
+                    success:function (res) {
 
+                    }
+                });
+
+            });
+        }, 1000); //每个0.1秒执行一次
+    });
+</script>
 
 </html>

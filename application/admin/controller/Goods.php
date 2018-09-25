@@ -174,6 +174,7 @@ class Goods extends BaseController
             'goodsProduct'  =>    $goodsProduct,
             'goodsImg'     =>   $goodsImg
         ]);
+
         return $this->fetch('goods-edit');
     }
 }

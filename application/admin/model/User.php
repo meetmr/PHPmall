@@ -8,7 +8,7 @@
 
 namespace app\admin\model;
 
-
+use app\admin\model\UserAddress;
 class User extends BaseModel
 {
     protected $table = 'tp_users';
@@ -26,5 +26,9 @@ class User extends BaseModel
     // 传入用户名密码 判断是否正确
     public static function loinUser($username,$password){
         return self::where(['username'=>$username])->where(['password'=>md5($password)])->find();
+    }
+    // 获取用户地址
+    public static function getUserAddress($u_id){
+        return UserAddress::where(['user_id'=>$u_id])->select();
     }
 }

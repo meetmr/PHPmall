@@ -78,3 +78,9 @@ function getGoodsName($goods_id){
     $goods_name = Goods::where(['id'=>$goods_id])->value('goods_name');
     return subtext($goods_name,50);
 }
+//订单号   产品编号
+function get_order()
+{
+    $yCode = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J','O');
+    return $yCode[intval(date('Y')) - 2012] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
+}

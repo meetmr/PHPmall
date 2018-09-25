@@ -16,6 +16,7 @@ use app\admin\model\Category;
 use app\admin\model\Article;
 use app\admin\model\Cart as CartModel;
 use app\admin\model\Broadcast;
+use app\admin\model\Order;
 class BaseController extends Controller
 {
     public function initialize()
@@ -97,5 +98,11 @@ class BaseController extends Controller
         $this->assign([
             'roadcast' =>  $roadcast
         ]);
+    }
+
+    // 获取订单
+    public function getOrder(){
+        $order = Order::where(['user_id'=>session('user.id')])->select();
+        return $order;
     }
 }

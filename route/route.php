@@ -36,3 +36,7 @@ Route::get('user/address','user/user/Address',['ext'=>'html|htm']);
 
 // 购物车
 Route::get('cart','user/cart/info',['ext'=>'html|htm']);
+
+// 下单
+Route::get('all','user/order/all',['ext'=>'html|htm']);
+Route::get('show_order/:id','user/order/showOrder',['ext'=>'html|htm']);

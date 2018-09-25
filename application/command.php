@@ -9,4 +9,4 @@
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
 
-return ['app\user\command\Test'];
+return ['app\user\command\Order'];

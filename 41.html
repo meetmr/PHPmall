@@ -1,0 +1,56 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+    <title>testc</title>
+
+
+</head>
+<body>
+<script type="text/javascript">
+    //添加timer标识
+    var obj ={};
+    $(function(){
+        $("div[end!='']").each(function(){
+            var timerDiv = $(this).attr("id");
+            obj[timerDiv] = new Date($(this).attr("end"));
+            obj[timerDiv].minilions = obj[timerDiv].getTime();
+            //var obj[timerDiv].timer;
+            if(obj[timerDiv].timer){
+                clearInterval(obj[timerDiv].timer);
+            }
+            obj[timerDiv].timer = setInterval(function(){
+                var currentTime = new Date();
+                $("#currentTimer").html(
+                    currentTime.getFullYear()+"/"+currentTime.getMonth()+"/"+currentTime.getDate()+" "+
+                    currentTime.getHours()+":"+currentTime.getMinutes()+":"+currentTime.getSeconds());
+                timecount(obj[timerDiv],timerDiv);
+            },1000);
+        });
+    })
+    function timecount(currentTimer,timerDiv){
+        var distance = currentTimer -new Date();
+        var hourse = 60*60*1000;
+        var minutes = 60*1000;
+        var seconds= 1000;
+        var mhour = parseInt(distance/hourse);
+        var mminu = parseInt((distance-mhour*hourse)/minutes);
+        var msecond = parseInt((distance-mhour*hourse-mminu*minutes)/seconds);
+        var str = mhour+":"+mminu+":"+msecond;
+        $("#"+timerDiv).html(str);
+        if(mhour==0 && mminu==0 && msecond==0 || (msecond<0)){
+            clearInterval(obj[timerDiv].timer);
+            $("#"+timerDiv).html("时间到!");
+        }
+    }
+</script>
+当前时间:<div id="currentTimer" style="background-color:blue"></div>
+截止时间:2015/02/19 18:56:30<br/>
+剩余时间：<div id="timer" end="2015/02/19 18:56:30" style="background-color:pink"></div>
+截止时间:2015/01/28 19:59:16<br/>
+剩余时间：<div id="timer2" end="2015/01/28 19:59:16" style="background-color:yellow"></div>
+截止时间:2015/02/24 14:23:10<br/>
+剩余时间：<div id="timer3" end="2015/02/24 14:23:10" style="background-color:orange"></div>
+</body>
+
+</html>
