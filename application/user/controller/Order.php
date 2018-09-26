@@ -17,6 +17,8 @@ use app\admin\model\Goods;
 use app\admin\model\UserAddress;
 use app\admin\model\Order as OrderModel;
 use Endroid\QrCode\QrCode;
+use think\Db;
+
 class Order extends BaseController
 {
     public function initialize(){
@@ -104,7 +106,7 @@ class Order extends BaseController
             $order['user_id'] = session('user.id');
             $order['goods_item'] = json_encode($userCart);
             $order['shipping_name'] = $data['shipping_name'];
-            $order['close_time'] = time() + 10;
+            $order['close_time'] = time() + 1800;
             $info = OrderModel::create($order);
             if($info){
                 Cart::where(['u_id'=>$user_id])->delete();
@@ -151,6 +153,7 @@ class Order extends BaseController
         echo $qrCode->writeString();
         exit;
     }
+
     public function testingOrder(){
         $order_id = Request::post('order_id');
         return json(OrderModel::where(['id'=>$order_id])->value('status'));
@@ -164,5 +167,18 @@ class Order extends BaseController
         $orderCode = Request::post('order_code');
         $status = OrderModel::where(['id'=>$orderCode])->value('status');
        return $status;
+    }
+    public function cancelOrder(){
+        $order_id = Request::post('order_id');
+        $order = OrderModel::where(['order_id'=>$order_id])->find();
+        $goods_item = json_decode($order['goods_item']);
+        foreach ($goods_item as $item){
+            $stock = Goods::where(['id'=>$item->g_id])->value('stock');
+            $stock += $item->number;
+            Db::table('tp_goods')->where(['id'=>$item->g_id])->update(['stock'=>$stock]);
+        }
+        // 修改订单状态
+        Db::table('tp_order')->where(['id'=>$order['id']])->update(['status'=>6]);
+        return json(1);
     }
 }

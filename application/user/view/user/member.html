@@ -8,7 +8,9 @@
 	<div class="w clearfix">
 		{include file='public/mem_menu'}
 		<script src="/static/index/js/jquery.lavalamp.min.js"></script>
-<script>
+		<script src="/static/layer/layer.js"></script>
+
+		<script>
 $(function(){
 	//边栏菜单的伸缩效果
 	$("#mem_menu h2").click(function(){
@@ -118,7 +120,20 @@ $(function(){
 							</i>
 						</td>
 						<td class="t4">
-							 {if  $vo_order.status == 2} 状态正常{else}<span class="close endtime" value="<?php echo ($vo_order['close_time']);?>">{/if}</span>
+
+							{switch $vo_order.status }
+							{case 1 }
+							<span class="close endtime" value="<?php echo ($vo_order['close_time']);?>">
+							{/case}
+							{case 2}
+							<span class="green">状态正常</span>
+							{/case}
+							{case 6}
+							<a class="blue">订单关闭</a>
+							{/case}
+							{default /}默认情况
+							{/switch}
+
 						</td>
 						<td class="t5">
 							{switch $vo_order.status }
@@ -139,8 +154,8 @@ $(function(){
 						<td class="t6 start" value="{$vo_order.id}" id="start{$vo_order.id}">
 							{switch $vo_order.status }
 							{case 1 }
-							<a order_id="55" id="pay55" class="pointer re_pay buttonred">去支付</a>
-							<a url="/member/OrderMember/cancel/id/wdgnpyjno6" class="pointer cancel_order">取消订单</a>
+							<a href="{:url('user/order/showOrder',array('id'=>$vo_order.order_id))}" class="pointer re_pay buttonred">去支付</a>
+							<a onclick="cancelOrder('{$vo_order.order_id}')" class="pointer cancel_order">取消订单</a>
 							{/case}
 							{case 6}
 							<a class="blue">交易关闭</a>
@@ -187,26 +202,45 @@ $(function(){
         }, 1000); //每个0.1秒执行一次
     });
 
-    $(function(){
-        setInterval(function(){
-            $(".start").each(function(){
-                var obj = $(this);
-                var order_id = obj.attr('value');
-                $.ajax({
-                    url:"{:url('user/order/invalidOrder')}",
-                    type:"POST",
-                    dataType:"json",
-                    data:{
-                        order_id:order_id
-                    },
-                    success:function (res) {
+    // 取消订单
+    function cancelOrder(order_id){
 
-                    }
-                });
-
-            });
-        }, 1000); //每个0.1秒执行一次
-    });
+        $.ajax({
+            url:"{:url('user/order/cancelOrder')}",
+            type:"POST",
+            dataType:"json",
+            data:{
+                order_id:order_id
+            },
+            success:function (res) {
+				if(res == 1){
+                    layer.alert('订单取消成功',function () {
+                        window.location.reload();  //刷新父级页面
+                    });
+				}
+            }
+        });
+	}
+    // $(function(){
+    //     setInterval(function(){
+    //         $(".start").each(function(){
+    //             var obj = $(this);
+    //             var order_id = obj.attr('value');
+    //             $.ajax({
+    //                 url:"{:url('user/order/invalidOrder')}",
+    //                 type:"POST",
+    //                 dataType:"json",
+    //                 data:{
+    //                     order_id:order_id
+    //                 },
+    //                 success:function (res) {
+	//
+    //                 }
+    //             });
+	//
+    //         });
+    //     }, 1000); //每个0.1秒执行一次
+    // });
 </script>
 
 </html>
