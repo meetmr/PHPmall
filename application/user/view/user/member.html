@@ -118,7 +118,7 @@ $(function(){
 							</i>
 						</td>
 						<td class="t4">
-							<span class="close endtime" value="<?php echo ($vo_order['close_time']);?>">	</span>
+							 {if  $vo_order.status == 2} 状态正常{else}<span class="close endtime" value="<?php echo ($vo_order['close_time']);?>">{/if}</span>
 						</td>
 						<td class="t5">
 							{switch $vo_order.status }
@@ -127,6 +127,9 @@ $(function(){
 							{/case}
 							{case 6}
 							<span class="green">取消订单</span>
+							{/case}
+							{case 2}
+							<a class="blue">付款成功</a>
 							{/case}
 							{default /}默认情况
 							{/switch}
@@ -141,6 +144,9 @@ $(function(){
 							{/case}
 							{case 6}
 							<a class="blue">交易关闭</a>
+							{/case}
+							{case 2}
+							<a class="blue">付款成功</a>
 							{/case}
 							{default /}默认情况
 							{/switch}
@@ -187,7 +193,7 @@ $(function(){
                 var obj = $(this);
                 var order_id = obj.attr('value');
                 $.ajax({
-                    url:"{:url('user/order/testingOrder')}",
+                    url:"{:url('user/order/invalidOrder')}",
                     type:"POST",
                     dataType:"json",
                     data:{

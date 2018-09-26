@@ -31,12 +31,6 @@ class Controller
     protected $request;
 
     /**
-     * 应用实例
-     * @var \think\App
-     */
-    protected $app;
-
-    /**
      * 验证失败是否抛出异常
      * @var bool
      */
@@ -49,33 +43,52 @@ class Controller
     protected $batchValidate = false;
 
     /**
-     * 前置操作方法列表
+     * 前置操作方法列表（即将废弃）
      * @var array $beforeActionList
      */
     protected $beforeActionList = [];
 
     /**
+     * 控制器中间件
+     * @var array
+     */
+    protected $middleware = [];
+
+    /**
      * 构造方法
      * @access public
      */
-    public function __construct()
+    public function __construct(App $app = null)
     {
-        $this->request = Container::get('request');
-        $this->app     = Container::get('app');
-        $this->view    = Container::get('view')->init(
-            $this->app['config']->pull('template')
-        );
+        $this->app     = $app ?: Container::get('app');
+        $this->request = $this->app['request'];
+        $this->view    = $this->app['view'];
 
         // 控制器初始化
         $this->initialize();
 
-        // 前置操作方法
-        if ($this->beforeActionList) {
-            foreach ($this->beforeActionList as $method => $options) {
-                is_numeric($method) ?
-                $this->beforeAction($options) :
-                $this->beforeAction($method, $options);
+        // 控制器中间件
+        if ($this->middleware) {
+            foreach ($this->middleware as $key => $val) {
+                if (!is_int($key)) {
+                    if (isset($val['only']) && !in_array($this->request->action(), $val['only'])) {
+                        continue;
+                    } elseif (isset($val['except']) && in_array($this->request->action(), $val['except'])) {
+                        continue;
+                    } else {
+                        $val = $key;
+                    }
+                }
+
+                $this->app['middleware']->controller($val);
             }
+        }
+
+        // 前置操作方法 即将废弃
+        foreach ((array) $this->beforeActionList as $method => $options) {
+            is_numeric($method) ?
+            $this->beforeAction($options) :
+            $this->beforeAction($method, $options);
         }
     }
 
@@ -232,11 +245,10 @@ class Controller
         if (!$v->check($data)) {
             if ($this->failException) {
                 throw new ValidateException($v->getError());
-            } else {
-                return $v->getError();
             }
-        } else {
-            return true;
+            return $v->getError();
         }
+
+        return true;
     }
 }

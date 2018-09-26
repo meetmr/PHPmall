@@ -16,6 +16,7 @@ use app\admin\Model\Cart;
 use app\admin\model\Goods;
 use app\admin\model\UserAddress;
 use app\admin\model\Order as OrderModel;
+use Endroid\QrCode\QrCode;
 class Order extends BaseController
 {
     public function initialize(){
@@ -103,7 +104,7 @@ class Order extends BaseController
             $order['user_id'] = session('user.id');
             $order['goods_item'] = json_encode($userCart);
             $order['shipping_name'] = $data['shipping_name'];
-            $order['close_time'] = time() + 600;
+            $order['close_time'] = time() + 10;
             $info = OrderModel::create($order);
             if($info){
                 Cart::where(['u_id'=>$user_id])->delete();
@@ -117,11 +118,51 @@ class Order extends BaseController
         }
     }
     public function showOrder($id){
-        dd($id);
+        $order = OrderModel::where(['order_id'=>$id])->where(['status'=>1])->find();
+       if(!$order){
+           return $this->redirect('/');
+       }
+        $this->assign([
+           'order'  =>  $order
+        ]);
+        return $this->fetch('show-order');
     }
+    //生成微信支付二维码
+    public function wxewm($orderCode = 151515){
+        $payPlus = PAY_PLUS.'pay/wxpay/';
+        include ($payPlus.'index2.php');
+        $qrCode = new QRcode();
+        $obj = new \WeiXinPay2();
+        $order = OrderModel::where(['id'=>$orderCode])->where(['status'=>1])->find();
+        if(!$order){
+            return $this->redirect('/');
+        }
+        $qrurl = $obj->getQrUrl($orderCode);
+        //2.生成二维码
+        $qrCode->setText($qrurl)
+            ->setSize(300)//大小
+            ->setLabelFontPath(PAY_PLUS.'/vendor/endroid\qrcode\assets\noto_sans.otf')
+            ->setErrorCorrectionLevel('high')
+            ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
+            ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
 
+            ->setLabelFontSize(16);
+        header('Content-Type: '.$qrCode->getContentType());
+        echo $qrCode->writeString();
+        exit;
+    }
     public function testingOrder(){
         $order_id = Request::post('order_id');
         return json(OrderModel::where(['id'=>$order_id])->value('status'));
+    }
+    public function ico(){
+        return $this->fetch();
+    }
+
+    // 验证订单是否失效
+    public function invalidOrder(){
+        $orderCode = Request::post('order_code');
+        $status = OrderModel::where(['id'=>$orderCode])->value('status');
+       return $status;
     }
 }

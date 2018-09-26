@@ -43,7 +43,8 @@ class Order extends Command
                 // 修改订单状态
                 Db::table('tp_order')->where(['id'=>$order['id']])->update(['status'=>6]);
             }
+            sleep(1);  //休眠1秒后再次执行
         }
-        sleep(1);  //休眠1秒数再次执行
+
     }
 }

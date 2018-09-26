@@ -14,6 +14,12 @@ namespace think;
 class Url
 {
     /**
+     * 配置参数
+     * @var array
+     */
+    protected $config = [];
+
+    /**
      * ROOT地址
      * @var string
      */
@@ -31,14 +37,31 @@ class Url
      */
     protected $app;
 
-    public function __construct(App $app)
+    public function __construct(App $app, array $config = [])
     {
-        $this->app = $app;
+        $this->app    = $app;
+        $this->config = $config;
 
         if (is_file($app->getRuntimePath() . 'route.php')) {
             // 读取路由映射文件
             $app['route']->setName(include $app->getRuntimePath() . 'route.php');
         }
+    }
+
+    /**
+     * 初始化
+     * @access public
+     * @param  array $config
+     * @return void
+     */
+    public function init(array $config = [])
+    {
+        $this->config = array_merge($this->config, array_change_key_case($config));
+    }
+
+    public static function __make(App $app, Config $config)
+    {
+        return new static($app, $config->pull('app'));
     }
 
     /**
@@ -89,7 +112,10 @@ class Url
         }
 
         if ($url) {
-            $rule = $this->app['route']->getName(isset($name) ? $name : $url . (isset($info['query']) ? '?' . $info['query'] : ''));
+            $checkName   = isset($name) ? $name : $url . (isset($info['query']) ? '?' . $info['query'] : '');
+            $checkDomain = $domain && is_string($domain) ? $domain : null;
+
+            $rule = $this->app['route']->getName($checkName, $checkDomain);
 
             if (is_null($rule) && isset($info['query'])) {
                 $rule = $this->app['route']->getName($url);
@@ -100,16 +126,11 @@ class Url
             }
         }
 
-        if (!empty($rule) && $match = $this->getRuleUrl($rule, $vars)) {
+        if (!empty($rule) && $match = $this->getRuleUrl($rule, $vars, $domain)) {
             // 匹配路由命名标识
             $url = $match[0];
 
-            if (!empty($match[1])) {
-                $host = $this->app['config']->get('app_host') ?: $this->app['request']->host();
-                if ($domain || $match[1] != $host) {
-                    $domain = $match[1];
-                }
-            }
+            $domain = $match[1];
 
             if (!is_null($match[2])) {
                 $suffix = $match[2];
@@ -123,10 +144,8 @@ class Url
 
             if ($alias) {
                 // 别名路由解析
-                foreach ($alias as $key => $val) {
-                    if (is_array($val)) {
-                        $val = $val[0];
-                    }
+                foreach ($alias as $key => $item) {
+                    $val = $item->getRoute();
 
                     if (0 === strpos($url, $val)) {
                         $url        = $key . substr($url, strlen($val));
@@ -141,6 +160,25 @@ class Url
                 $url = $this->parseUrl($url);
             }
 
+            // 检测URL绑定
+            if (!$this->bindCheck) {
+                $bind = $this->app['route']->getBind($domain && is_string($domain) ? $domain : null);
+
+                if ($bind && 0 === strpos($url, $bind)) {
+                    $url = substr($url, strlen($bind) + 1);
+                } else {
+                    $binds = $this->app['route']->getBind(true);
+
+                    foreach ($binds as $key => $val) {
+                        if (is_string($val) && 0 === strpos($url, $val) && substr_count($val, '/') > 1) {
+                            $url    = substr($url, strlen($val) + 1);
+                            $domain = $key;
+                            break;
+                        }
+                    }
+                }
+            }
+
             if (isset($info['query'])) {
                 // 解析地址里面参数 合并到vars
                 parse_str($info['query'], $params);
@@ -148,17 +186,8 @@ class Url
             }
         }
 
-        // 检测URL绑定
-        if (!$this->bindCheck) {
-            $bind = $this->app['route']->getBind();
-
-            if ($bind && 0 === strpos($url, $bind)) {
-                $url = substr($url, strlen($bind) + 1);
-            }
-
-        }
         // 还原URL分隔符
-        $depr = $this->app['config']->get('pathinfo_depr');
+        $depr = $this->config['pathinfo_depr'];
         $url  = str_replace('/', $depr, $url);
 
         // URL后缀
@@ -174,11 +203,11 @@ class Url
         // 参数组装
         if (!empty($vars)) {
             // 添加参数
-            if ($this->app['config']->get('url_common_param')) {
+            if ($this->config['url_common_param']) {
                 $vars = http_build_query($vars);
                 $url .= $suffix . '?' . $vars . $anchor;
             } else {
-                $paramType = $this->app['config']->get('url_param_type');
+                $paramType = $this->config['url_param_type'];
 
                 foreach ($vars as $var => $val) {
                     if ('' !== trim($val)) {
@@ -236,7 +265,7 @@ class Url
                 $module     = empty($path) ? $module : array_pop($path) . '/';
             }
 
-            if ($this->app['config']->get('url_convert')) {
+            if ($this->config['url_convert']) {
                 $action     = strtolower($action);
                 $controller = Loader::parseName($controller);
             }
@@ -254,11 +283,10 @@ class Url
             return '';
         }
 
+        $rootDomain = $this->app['request']->rootDomain();
         if (true === $domain) {
-
             // 自动判断域名
-            $domain     = $this->app['config']->get('app_host') ?: $this->app['request']->host();
-            $rootDomain = $this->app['config']->get('url_domain_root');
+            $domain = $this->config['app_host'] ?: $this->app['request']->host(true);
 
             $domains = $this->app['route']->getDomains();
 
@@ -288,12 +316,14 @@ class Url
                     }
                 }
             }
+        } elseif (!strpos($domain, '.')) {
+            $domain .= '.' . $rootDomain;
         }
 
         if (false !== strpos($domain, '://')) {
             $scheme = '';
         } else {
-            $scheme = $this->app['request']->isSsl() || $this->app['config']->get('is_https') ? 'https://' : 'http://';
+            $scheme = $this->app['request']->isSsl() || $this->config['is_https'] ? 'https://' : 'http://';
 
         }
 
@@ -304,7 +334,7 @@ class Url
     protected function parseSuffix($suffix)
     {
         if ($suffix) {
-            $suffix = true === $suffix ? $this->app['config']->get('url_html_suffix') : $suffix;
+            $suffix = true === $suffix ? $this->config['url_html_suffix'] : $suffix;
 
             if ($pos = strpos($suffix, '|')) {
                 $suffix = substr($suffix, 0, $pos);
@@ -315,25 +345,31 @@ class Url
     }
 
     // 匹配路由地址
-    public function getRuleUrl($rule, &$vars = [])
+    public function getRuleUrl($rule, &$vars = [], $allowDomain = '')
     {
         foreach ($rule as $item) {
             list($url, $pattern, $domain, $suffix) = $item;
-            if (empty($pattern)) {
-                return [rtrim($url, '$'), $domain, $suffix];
+
+            if (is_string($allowDomain) && $domain != $allowDomain) {
+                continue;
             }
 
-            $type = $this->app['config']->get('url_common_param');
+            if (empty($pattern)) {
+                return [rtrim($url, '?/-'), $domain, $suffix];
+            }
+
+            $type = $this->config['url_common_param'];
 
             foreach ($pattern as $key => $val) {
                 if (isset($vars[$key])) {
-                    $url = str_replace(['[:' . $key . ']', '[:' . $key . '$]', '<' . $key . '?>$', '<' . $key . '?>', ':' . $key . '$', ':' . $key . '', '<' . $key . '>$', '<' . $key . '>'], $type ? $vars[$key] : urlencode($vars[$key]), $url);
+                    $url = str_replace(['[:' . $key . ']', '<' . $key . '?>', ':' . $key, '<' . $key . '>'], $type ? $vars[$key] : urlencode($vars[$key]), $url);
                     unset($vars[$key]);
-
-                    $result = [$url, $domain, $suffix];
+                    $url    = str_replace(['/?', '-?'], ['/', '-'], $url);
+                    $result = [rtrim($url, '?/-'), $domain, $suffix];
                 } elseif (2 == $val) {
-                    $url    = str_replace(['/[:' . $key . ']', '/[:' . $key . '$]', '[:' . $key . ']', '[:' . $key . '$]', '<' . $key . '?>$', '<' . $key . '?>'], '', $url);
-                    $result = [$url, $domain, $suffix];
+                    $url    = str_replace(['/[:' . $key . ']', '[:' . $key . ']', '<' . $key . '?>'], '', $url);
+                    $url    = str_replace(['/?', '-?'], ['/', '-'], $url);
+                    $result = [rtrim($url, '?/-'), $domain, $suffix];
                 } else {
                     break;
                 }
@@ -351,6 +387,6 @@ class Url
     public function root($root)
     {
         $this->root = $root;
-        $this->app['request']->root($root);
+        $this->app['request']->setRoot($root);
     }
 }

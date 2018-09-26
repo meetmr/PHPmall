@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>结算-PHPMall</title>
+    <meta name="keywords" content="结算-PHPMall"/>
+    <meta name="description" content="结算-PHPMall"/>
+    <link rel="stylesheet" href="/static/user/css/base.css" />
+    <link rel="stylesheet" href="/static/user/css/cart.css" />
+    <link rel="stylesheet" href="/static/layui/css/layui.css" />
+    <script src="/static/user/js/jquery-2.1.4.min.js"></script>
+    <script src="/static/user/js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/static/layer/layer.js"></script>
+
+</head>
+<body>
+<div class="com-top-nav w">
+    <div class="wcp-wrap">
+
+    </div>
+</div>
+<!--头部-->
+{include file='index@public/header'}
+<div class="layui-container">
+    <div style="font-size: 18px;margin-top: 2em;margin-bottom: 1em">订单提交成功！	<span class="close endtime" value="<?php echo ($order['close_time']);?>">	</span></div>
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">订单详情</div>
+            <div class="layui-card-body">
+                <div class="w_cart_inner">
+                    <table class="w_cart_table">
+                        <thead>
+                        <tr>
+                            <td>订单编号</td>
+                            <td>收获地址</td>
+                            <td style="text-align: left">总价</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </thead>
+
+                        <tr class="item">
+                            <td>{$order.order_id}</td>
+                            <?php $address = json_decode($order['address']) ;?>
+                            <td class="p-img">
+                                    （<?php echo $address->name ?>）  <?php echo $address->detailed ?>
+                            </td>
+                            <td class="p-name">
+                                {$order.payment}
+                            </td>
+                            <td class="p-price">
+
+                            </td>
+                            <td class="p-quantity">
+                                <img src="{:url('user/order/wxewm',array('orderCode'=>$order.id))}"   width="150">
+                            </td>
+                            <td class="p-remove"></td>
+                        </tr>
+
+                        <tr class="cart_toolbar">
+                            <td colspan="5">
+                                <div style="width: 200px;" class="control">
+                                </div>
+                            </td>
+
+                            <td class="total_box" colspan="6">
+                                <p>
+                                    <label for="应付金额">总计</label> <span id="Jfinal" class="c_red total_price">¥<i></i>{$order.payment}</span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr class="cart_total">
+                            <td colspan="8">
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{include file='index@public/footer'}
+<script>
+    $(function(){
+      x = setInterval(function(){
+            var order_code = "{$order.id}";
+            $.ajax({
+                url:"{:url('user/order/invalidOrder')}",
+                type:"POST",
+                dataType:"json",
+                data:{
+                    order_code:order_code
+                },
+                success:function (res) {
+                    if(res === 6){
+                        clearInterval(x);
+                        layer.alert('订单失效',function () {
+                            location.href = "{:url('user/user/member')}"
+                        });
+                    }else if( res=== 2){
+                        clearInterval(x);
+                        layer.alert('支付成功',function () {
+                            location.href = "{:url('user/user/member')}"
+                        });
+                    }
+                }
+            });
+        }, 1000); //每个0.1秒执行一次
+    });
+
+    $(function(){
+        setInterval(function(){
+                var endTime = $(".endtime").attr('value');
+                var timestamp = Date.parse(new Date());
+                var nMS= (endTime-(timestamp/1000)) * 1000;
+                var myD=Math.floor(nMS/(1000 * 60 * 60 * 24)); //天
+                var myH=Math.floor(nMS/(1000*60*60)) % 24; //小时
+                var myM=Math.floor(nMS/(1000*60)) % 60; //分钟
+                var myS=Math.floor(nMS/1000) % 60; //秒
+                if(myD>= 0){
+                    var str = "请在"+myH+"小时"+myM+"分"+myS+"秒内支付";
+                }else{
+                    var str = "";
+                }
+             $(".endtime").html(str);
+        }, 1000); //每个0.1秒执行一次
+    });
+
+</script>

@@ -20,7 +20,7 @@ class Config implements \ArrayAccess
     private $config = [];
 
     /**
-     * 缓存前缀
+     * 配置前缀
      * @var string
      */
     private $prefix = 'app';
@@ -50,9 +50,9 @@ class Config implements \ArrayAccess
             $type = pathinfo($config, PATHINFO_EXTENSION);
         }
 
-        $class = false !== strpos($type, '\\') ? $type : '\\think\\config\\driver\\' . ucwords($type);
+        $object = Loader::factory($type, '\\think\\config\\driver\\', $config);
 
-        return $this->set((new $class())->parse($config), $name);
+        return $this->set($object->parse(), $name);
     }
 
     /**
@@ -72,37 +72,11 @@ class Config implements \ArrayAccess
                 return $this->set(include $file, $name);
             } elseif ('yaml' == $type && function_exists('yaml_parse_file')) {
                 return $this->set(yaml_parse_file($file), $name);
-            } else {
-                return $this->parse($file, $type, $name);
             }
-        } else {
-            return $this->config;
-        }
-    }
-
-    /**
-     * 自动加载配置文件（PHP格式）
-     * @access public
-     * @param  string    $name 配置名
-     * @return void
-     */
-    protected function autoLoad($name)
-    {
-        // 如果尚未载入 则动态加载配置文件
-        $module = Container::get('request')->module();
-        $module = $module ? $module . '/' : '';
-        $app    = Container::get('app');
-        $path   = $app->getAppPath() . $module;
-
-        if (is_dir($path . 'config')) {
-            $file = $path . 'config/' . $name . $app->getConfigExt();
-        } elseif (is_dir($app->getConfigPath() . $module)) {
-            $file = $app->getConfigPath() . $module . $name . $app->getConfigExt();
+            return $this->parse($file, $type, $name);
         }
 
-        if (isset($file) && is_file($file)) {
-            $this->load($file, $name);
-        }
+        return $this->config;
     }
 
     /**
@@ -117,7 +91,7 @@ class Config implements \ArrayAccess
             $name = $this->prefix . '.' . $name;
         }
 
-        return $this->get($name) ? true : false;
+        return !is_null($this->get($name)) ? true : false;
     }
 
     /**
@@ -130,21 +104,17 @@ class Config implements \ArrayAccess
     {
         $name = strtolower($name);
 
-        if (!isset($this->config[$name])) {
-            // 如果尚未载入 则动态加载配置文件
-            $this->autoLoad($name);
-        }
-
         return isset($this->config[$name]) ? $this->config[$name] : [];
     }
 
     /**
      * 获取配置参数 为空则获取所有配置
      * @access public
-     * @param  string    $name 配置参数名（支持多级配置 .号分割）
+     * @param  string    $name      配置参数名（支持多级配置 .号分割）
+     * @param  mixed     $default   默认值
      * @return mixed
      */
-    public function get($name = null)
+    public function get($name = null, $default = null)
     {
         // 无参数时获取所有
         if (empty($name)) {
@@ -161,17 +131,12 @@ class Config implements \ArrayAccess
         $name[0] = strtolower($name[0]);
         $config  = $this->config;
 
-        if (!isset($config[$name[0]])) {
-            // 如果尚未载入 则动态加载配置文件
-            $this->autoLoad($name[0]);
-        }
-
         // 按.拆分成多维数组进行判断
         foreach ($name as $val) {
             if (isset($config[$val])) {
                 $config = $config[$val];
             } else {
-                return;
+                return $default;
             }
         }
 

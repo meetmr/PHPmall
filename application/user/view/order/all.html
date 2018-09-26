@@ -136,7 +136,7 @@
                         location.href = "{:url('user/user/addAddress')}";
                     })
 				}else if(res.code == 1){
-                    layer.alert('下单成功、请支付',function () {
+                    layer.alert('下单成功！请支付',function () {
                         var url = "/show_order/"+res.orderId+".html";
                         location.href = url;
                     })
