@@ -149,7 +149,7 @@ $(function(){
 							{default /}默认情况
 							{/switch}
 
-							<br><a href="/member/OrderMember/show_order/id/p80xgppxoq" target="_blank" class="gray">订单详情</a>
+							<br><a href="{:url('user/order/show_Order',array('id'=>$vo_order.order_id))}" target="_blank" class="gray">订单详情</a>
 						</td>
 						<td class="t6 start" value="{$vo_order.id}" id="start{$vo_order.id}">
 							{switch $vo_order.status }

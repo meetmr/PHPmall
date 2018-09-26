@@ -40,3 +40,8 @@ Route::get('cart','user/cart/info',['ext'=>'html|htm']);
 // 下单
 Route::get('all','user/order/all',['ext'=>'html|htm']);
 Route::get('show_order/:id','user/order/showOrder',['ext'=>'html|htm']);
+
+// 订单详情
+
+Route::get('showOrder/:id','user/order/show_Order',['ext'=>'html|htm']);
+

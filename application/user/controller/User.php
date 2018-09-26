@@ -86,4 +86,5 @@ class User extends BaseController
             return json($state);
         }
     }
+
 }

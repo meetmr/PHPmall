@@ -168,6 +168,8 @@ class Order extends BaseController
         $status = OrderModel::where(['id'=>$orderCode])->value('status');
        return $status;
     }
+
+    // 取消订单
     public function cancelOrder(){
         $order_id = Request::post('order_id');
         $order = OrderModel::where(['order_id'=>$order_id])->find();
@@ -180,5 +182,14 @@ class Order extends BaseController
         // 修改订单状态
         Db::table('tp_order')->where(['id'=>$order['id']])->update(['status'=>6]);
         return json(1);
+    }
+
+    // 订单详情
+    public function show_Order($id){
+        $order = OrderModel::where(['order_id'=>$id])->find();
+        $this->assign([
+            'order' =>  $order
+        ]);
+       return  $this->fetch('info-order');
     }
 }
