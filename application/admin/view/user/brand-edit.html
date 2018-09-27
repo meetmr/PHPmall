@@ -1,0 +1,112 @@
+{include file="public/header" /}
+<body>
+<div class="x-body ">
+    <form  class="layui-form">
+        <div class="layui-form-item">
+            <label for="brand_name" class="layui-form-label">品牌名称</label>
+            <div class="layui-input-inline">
+                <input type="text" id="brand_name" name="brand_name"  autocomplete="off" class="layui-input"  value="{$brandRow.brand_name}">
+                <input type="hidden" id="id" name="id"  autocomplete="off" class="layui-input"  value="{$brandRow.id}">
+                <input type="hidden" id="yuantu" name="yuantu"  autocomplete="off" class="layui-input"  value="{$brandRow.brand_logo}">
+                <p id="pLog" style="color:red"></p>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="brand_url" class="layui-form-label">品牌地址</label>
+            <div class="layui-input-inline">
+                <input type="text" id="brand_url" name="brand_url" autocomplete="off" class="layui-input"  value="{$brandRow.brand_url}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">品牌LOGO</label>
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" id="upload1">上传图片</button>
+                <input type="hidden" id="img_url" name="brand_logo" value=""/>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img"
+                         {if $brandRow.brand_logo !=null} src="<?php echo '/static/uploads/' ?>{$brandRow.brand_logo}" {/if} width="100px" height="80px" id="demo1"/>
+                    <p id="demoText"></p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea name="brand_description" placeholder="请输入内容" class="layui-textarea">{$brandRow.brand_description}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <input type="checkbox"  {if 1==$brandRow.status}checked=""{/if}  name="status" lay-skin="switch" lay-filter="switchTest" lay-text="是|否">
+                <div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>ON</em><i></i></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn" lay-submit lay-filter="addId">
+                修改
+            </button>
+        </div>
+    </form>
+</div>
+    <script type="text/javascript">
+        layui.use('upload', function(){
+            var upload = layui.upload
+                , $ = layui.jquery;
+            var uploadInst = upload.render({
+                elem: '#upload1' //绑定元素
+                ,url: "{:url('admin/brand/upload')}"
+                ,before: function(obj){
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result){
+                        $('#demo1').attr('src', result); //图片链接（base64）
+                    });
+                }
+                ,done: function(res){
+                    //如果上传失败
+                    if(res.code === 0){
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                    document.getElementById("img_url").value = res.url;
+
+                }
+                ,error: function(){
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                    });
+                }
+            });
+        });
+</script>
+<script>
+    layui.use(['form'], function(){
+        $ = layui.jquery;
+        var form = layui.form,layer = layui.layer;
+        //监听提交
+        form.on('submit(addId)', function(data){
+            //console.log(data);
+            $.post("{:url('admin/brand/edit')}",data.field,function(info){
+                if (info.errorCode===1) {
+                    layer.alert("修改成功", {icon: 6},function () {
+                        window.parent.location.reload();  //刷新父级页面
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前弹出层
+                        parent.layer.close(index);
+                    });
+                }else{
+                    layer.alert(info.msg, {icon: 5});
+                }
+            },'json');
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

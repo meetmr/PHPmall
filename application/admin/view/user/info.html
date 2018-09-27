@@ -1,0 +1,51 @@
+﻿{include file="public/header" /}
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">用户管理</a>
+        <a>
+          <cite>用户列表</cite>
+        </a>
+      </span>
+  <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+    <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+
+<div class="x-body" >
+
+  <div class="container-wrap">
+    <div class="box-1">
+      <table class="layui-table">
+        <thead>
+        <tr>
+        <th style="text-align: center" width="100">用户名</th>
+        <th style="text-align: center" width="40">姓名</th>
+        <th style="text-align: center" width="20">电话</th>
+          <th style="text-align: center" width="50" >邮箱</th>
+      </tr>
+      </thead>
+      <tbody>
+      {volist name="users" id="user"}
+
+      <tr  style="text-align: center">
+        <td style="text-align: left">
+          {$user.username}
+          <i class="layui-icon layui-icon-user" onclick="x_admin_show('收获地址','{:url(\'admin/user/address\',[\'id\'=>$user.id])}/',800,400)" title="收获地址" style="cursor: pointer"></i>
+          <i class="layui-icon layui-icon-chart-screen"  onclick="x_admin_show('订单','{:url(\'admin/user/order\',[\'id\'=>$user.id])}/')"  title="订单"  style="cursor: pointer"></i>
+        </td>
+        <td>{$user.name}</td>
+        <td>{$user.phone}</td>
+        <td>{$user.email}</td>
+
+      </tr>
+      {/volist}
+      </tbody>
+    </table>
+    </div>
+</div>
+  <div class="page">
+  </div>
+
+</body>
+</html>

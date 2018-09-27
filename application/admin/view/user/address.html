@@ -1,0 +1,45 @@
+﻿{include file="public/header" /}
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">用户管理</a>
+        <a>
+          <cite>收获地址</cite>
+        </a>
+      </span>
+  <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+    <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+
+<div class="x-body" >
+
+  <div class="container-wrap">
+    <div class="box-1">
+      <table class="layui-table">
+        <thead>
+        <tr>
+        <th style="text-align: center" width="100">姓名</th>
+        <th style="text-align: center" width="40">电话</th>
+        <th style="text-align: center" width="20">地址</th>
+      </tr>
+      </thead>
+      <tbody>
+      {volist name="userAddress" id="user_address"}
+      <tr  style="text-align: center">
+        <td>
+          {$user_address.name}
+        </td>
+        <td> {$user_address.province}</td>
+        <td>  {$user_address.detailed}</td>
+      </tr>
+      {/volist}
+      </tbody>
+    </table>
+    </div>
+</div>
+  <div class="page">
+  </div>
+
+</body>
+</html>

@@ -107,7 +107,9 @@
 									<?php $goodss = $v_doods->goods;?>
 									<tr>
 										<td class="td1">
-													<a class="img60" href="/goods/3" target="_blank">
+											<?php $id = $goodss->id;?>
+
+											<a class="img60"  href="{:url('index/Goods/index',array('id'=>$id))}"target="_blank">
 													<img class="jsimg"   src="/static/uploads/<?php echo $goodss->og_thumb?>"></a>
 												</td>
 												<td class="td2 gray">
