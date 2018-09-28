@@ -54,6 +54,7 @@ class Brand extends BaseController
             $info = BrandModel::update($data,['id'=>$id]);
             return $this->_return($info);
         }
+
         $id = intval(input('id'));
         $brandRow = BrandModel::get($id);
         $this->assign([

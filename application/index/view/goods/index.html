@@ -84,7 +84,7 @@
 					</div>
 					<div class="buttonbox">
 							{if $Think.session.user}
-							 <input type="button" value="加入购物车" class="dtl-cart buy"  onclick="addCatr('{$goodsInfo.id}')">
+							 <input type="button" {if $goodsInfo.stock == 0} disabled value="暂无库存" {else}  value="加入购物车"   {/if}  class="dtl-cart buy"  onclick="addCatr('{$goodsInfo.id}')">
 							 <input type="button" value="立即购买" rel="buy" class="buy" style="background-color: #d00;"  ctype='p80xgpxoq1'>
 							{else}
 							<a href="{:url('user/login/login')}"><input type="button" value="加入购物车" class="dtl-cart buy" ></a>
