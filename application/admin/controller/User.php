@@ -9,7 +9,6 @@
 namespace app\admin\controller;
 use app\admin\model\UserAddress;
 use app\admin\model\User as UserModel;
-use think\facade\Request;
 use app\admin\model\Order;
 class User extends BaseController
 {
@@ -35,4 +34,5 @@ class User extends BaseController
         ]);
         return $this->fetch();
     }
+
 }

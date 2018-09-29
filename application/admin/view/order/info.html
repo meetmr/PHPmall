@@ -3,7 +3,7 @@
 <div class="x-nav">
       <span class="layui-breadcrumb">
         <a href="">首页</a>
-        <a href="">用户管理</a>
+        <a href="">订单管理</a>
         <a>
           <cite>订单列表</cite>
         </a>
@@ -20,18 +20,21 @@
         <thead>
         <tr>
         <th style="text-align: center" width="100">订单号</th>
-        <th style="text-align: center" width="40">总价</th>
-          <th style="text-align: center" width="20">订单状态</th>
-          <th style="text-align: center" width="20">收获地址</th>
-          <th style="text-align: center" width="20">商品列表</th>
-          <th style="text-align: center" width="20">订单时间</th>
-      </tr>
+        <th style="text-align: center" width="40">用户</th>
+        <th style="text-align: center" width="20">总价</th>
+        <th style="text-align: center" width="50" >订单状态</th>
+        <th style="text-align: center" width="50" >收获地址</th>
+        <th style="text-align: center" width="50" >商品列表</th>
+        <th style="text-align: center" width="50" >订单时间</th>
+          <th style="text-align: center" width="50">操作</th>
+
+        </tr>
       </thead>
       <tbody>
-      {volist name="orders" id="orders"}
+      {volist name="orderss" id="orders"}
       <tr  style="text-align: center">
         <td><a style="cursor: pointer" onclick="x_admin_show('订单详情','{:url(\'admin/order/orderInfo\',[\'id\'=>$orders.id])}/')" title="订单详情" >{$orders.order_id}</a></td>
-
+        <td>{$orders.user_id|getUserName}</td>
         <td>{$orders.payment}</td>
         <?php $goods = json_decode($orders['goods_item']) ;?>
         <?php $address = json_decode($orders['address']) ;?>
@@ -68,6 +71,16 @@
           <?php endforeach;?>
         </td>
         <td>  {$orders.create_time}</td>
+        <td>
+          <div class="layui-btn-group">
+            <button class="layui-btn layui-btn-primary layui-btn-sm">
+              <i class="layui-icon"></i>
+            </button>
+            <button title="更改订单状态"  onclick="x_admin_show('更改订单状态','{:url(\'admin/order/updateState\',[\'id\'=>$orders.id])}/',500,400)"  class="layui-btn layui-btn-primary layui-btn-sm">
+              <i class="layui-icon"></i>
+            </button>
+          </div>
+        </td>
       </tr>
       {/volist}
       </tbody>
@@ -75,7 +88,7 @@
     </div>
 </div>
   <div class="page">
+    {$orderss|raw}
   </div>
-
 </body>
 </html>

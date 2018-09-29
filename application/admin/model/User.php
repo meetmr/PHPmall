@@ -31,4 +31,8 @@ class User extends BaseModel
     public static function getUserAddress($u_id){
         return UserAddress::where(['user_id'=>$u_id])->select();
     }
+    // 传入用户ID 获取用户名
+    public static function getUserName($u_id){
+        return self::where(['id'=>$u_id])->value('username');
+    }
 }

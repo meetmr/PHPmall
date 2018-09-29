@@ -1,0 +1,93 @@
+{include file="public/header" /}
+<script src="/static/public/ueditor/ueditor.config.js"></script>
+<script src="/static/public/ueditor/ueditor.all.min.js"></script>
+<script src="/static/public/ueditor/lang/zh-cn/zh-cn.js"></script>
+<body>
+<div class="x-body ">
+    <form  class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单状态</label>
+            <div class="layui-input-block">
+                <select name="city" lay-verify="required">
+                    <option value=""></option>
+                    <option value="1" {if $state == 1} selected {/if}>未付款</option>
+                    <option value="2" {if $state == 2} selected {/if} >已付款</option>
+                    <option value="3" {if $state == 3} selected {/if} >未发货</option>
+                    <option value="4" {if $state == 4} selected {/if} >已发货</option>
+                    <option value="5" {if $state == 5} selected {/if} >交易成功</option>
+                    <option value="6" {if $state == 6} selected {/if} >交易关闭</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn" lay-submit lay-filter="addId">
+                增加
+            </button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    layui.use('upload', function(){
+        var upload = layui.upload
+            , $ = layui.jquery;
+        var uploadInst = upload.render({
+            elem: '#upload1' //绑定元素
+            ,url: "{:url('admin/brand/upload')}"
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.code === 0){
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                document.getElementById("img_url").value = res.url;
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function(){
+                    uploadInst.upload();
+                });
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    //实例化编辑器
+    //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+    UE.getEditor('content',{initialFrameWidth:600,initialFrameHeight:400,});
+</script>
+<script>
+    layui.use(['form'], function(){
+        $ = layui.jquery;
+        var form = layui.form,layer = layui.layer;
+        //监听提交
+        form.on('submit(addId)', function(data){
+            //console.log(data);
+            $.post("{:url('admin/Article/add')}",data.field,function(info){
+                if (info.errorCode===1) {
+                    layer.alert("添加成功", {icon: 6},function () {
+                        window.parent.location.reload();  //刷新父级页面
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前弹出层
+                        parent.layer.close(index);
+                    });
+                }else{
+                    layer.alert(info.msg, {icon: 5});
+                }
+            },'json');
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

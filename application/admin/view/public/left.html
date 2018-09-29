@@ -114,15 +114,46 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a _href="{:url('index/blueprint/blueprintInfo')}">
+                        <a _href="{:url('admin/order/info')}">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>订单列表</cite>
+                            <cite>全部订单</cite>
+                        </a>
+                    </li >
+
+                    <li>
+                        <a _href="{:url(\'admin/order/info\',[\'status\'=>1])}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>未付款订单</cite>
                         </a>
                     </li >
                     <li>
-                        <a _href="{:url('index/blueprint/blueprintInterior')}">
+                        <a _href="{:url(\'admin/order/info\',[\'status\'=>2])}">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>订单查询</cite>
+                            <cite>已付款订单</cite>
+                        </a>
+                    </li >
+                    <li>
+                        <a _href="{:url(\'admin/order/info\',[\'status\'=>3])}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>未发货订单</cite>
+                        </a>
+                    </li >
+                    <li>
+                        <a _href="{:url(\'admin/order/info\',[\'status\'=>4])}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>已发货订单</cite>
+                        </a>
+                    </li >
+                    <li>
+                        <a _href="{:url(\'admin/order/info\',[\'status\'=>5])}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>交易成功订单</cite>
+                        </a>
+                    </li >
+                    <li>
+                        <a _href="{:url(\'admin/order/info\',[\'status\'=>6])}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>交易关闭订单</cite>
                         </a>
                     </li >
                 </ul>

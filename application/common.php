@@ -13,7 +13,7 @@ use app\admin\model\Category;
 use app\admin\model\Product;
 use app\admin\model\Recommend;
 use  app\admin\model\Goods;
-
+use app\admin\model\User;
 //图片处理
 function my_scandir($dir = UEDIOOR){
     $files = array();
@@ -83,4 +83,8 @@ function get_order()
 {
     $yCode = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J','O');
     return $yCode[intval(date('Y')) - 2012] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
+}
+
+function getUserName($u_id){
+    return User::getUserName($u_id);
 }

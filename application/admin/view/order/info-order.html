@@ -1,0 +1,92 @@
+﻿{include file="public/header" /}
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">订单管理</a>
+        <a>
+          <cite>订单详情</cite>
+        </a>
+      </span>
+  <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+    <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+
+<div class="x-body" >
+
+  <?php $goods = json_decode($order['goods_item']) ;?>
+  <?php $address = json_decode($order['address']) ;?>
+    <div class="layui-card">
+      <div class="layui-card-header">订单状态 :
+        {switch $order.status }
+        {case 1 }
+        <span class="green">待付款</span>
+        {/case}
+        {case 2 }
+        已付款
+        {/case}
+        {case 3}
+        <span class="green">未发货</span>
+        {/case}
+        {case 4}
+        <a class="blue">已发货</a>
+        {/case}
+        {case 5}
+        <a class="blue">交易成功</a>
+        {/case}
+        {case 6}
+        <a class="blue">交易关闭</a>
+        {/case}
+        {default /}订单异常
+        {/switch}
+      </div>
+      <div class="layui-card-header">订单信息 : {$order.order_id}</div>
+      <div class="layui-card-body">
+        收货人信息 :<?php echo $address->detailed ;?>,<?php echo $address->name ;?>，<?php echo $address->province ;?>
+      </div>
+      <div class="layui-card-body">
+        货运方式 :EMS
+      </div>
+      <div class="layui-card-body">
+        付款方式 : 微信
+      </div>
+    </div>
+  <div class="container-wrap">
+    <div class="box-1">
+      <table class="layui-table">
+        <thead>
+        <tr>
+          <th style="text-align: center" width="30">商品号</th>
+          <th style="text-align: center" width="100">商品名称</th>
+          <th style="text-align: center" width="40">商品单价</th>
+          <th style="text-align: center" width="20">图片</th>
+          <th style="text-align: center" width="50" >数量</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <?php foreach($goods as $v_doods): ?>
+        <?php $goodss = $v_doods->goods;?>
+        <tr  style="text-align: center">
+          <td><?php echo $goodss->goods_code ?></td>
+          <td><?php echo $goodss->goods_name ?></td>
+          <td><?php echo $goodss->shop_price ?></td>
+          <td>
+            <?php $id = $goodss->id;?>
+            <a class="img60" href="{:url('index/Goods/index',array('id'=>$id))}" target="_blank"> <img title="<?php echo $goodss->goods_name?>" class="jsimg"   src="/static/uploads/<?php echo $goodss->og_thumb?>" width="30"></a>
+          </td>
+          <td>×<?php echo $v_doods->number ?></td>
+        </tr>
+        <?php endforeach;?>
+        <td style="text-align: center">
+          总价
+        </td>
+        <td colspan="4"style="text-align: right;color:red;">{$order.payment}</td>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
